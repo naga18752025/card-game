@@ -20,7 +20,7 @@ html, body {
   width: 100%;
   background-color: hsl(211, 100%, 95%);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  padding: 16px 0;
+  padding: 1.5vh 0;
 }
 
 #ue h1 {
