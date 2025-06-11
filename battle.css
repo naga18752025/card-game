@@ -59,8 +59,8 @@ html, body {
 }
 
 #main{
-    margin-top: 20vh;
-    margin-bottom: 20vh;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
     background-color: rgb(255, 255, 255);
     padding:20px 3% 20px 3%;
     border-radius: 10px;
@@ -76,9 +76,17 @@ html, body {
 }
 
 .enemy-card{
-    padding: 45px 30px;
+    position:relative;
+    width: 70px;      /* お好みの固定サイズに */
+    height: 100px;      /* ↑ ここがポイント */
+    overflow: hidden;  /* 必要に応じて中身のはみ出し対策 */
+    white-space: nowrap;  /* テキスト折返し防止（必要に応じて） */
+    text-overflow: ellipsis; /* 長い文字列の処理 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 5px double #555555;
     margin: 0 15px 0 15px;
-    border: 5px double #555;
     background-color: rgb(52, 54, 202);
 }
 
@@ -92,10 +100,18 @@ html, body {
 
 
 .my-card{
-    padding: 45px 30px;
-    margin: 0 15px 0 15px;
+    position: relative; 
+    width: 70px;      /* お好みの固定サイズに */
+    height: 100px;      /* ↑ ここがポイント */
+    overflow: hidden;  /* 必要に応じて中身のはみ出し対策 */
+    white-space: nowrap;  /* テキスト折返し防止（必要に応じて） */
+    text-overflow: ellipsis; /* 長い文字列の処理 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 5px double #555555;
-    background-color: rgb(52, 54, 202);
+    margin: 0 15px 0 15px;
+    background-color: rgb(104, 106, 201);
 }
 
 #yamahuda-sutehuda{
@@ -117,4 +133,121 @@ html, body {
     padding: 45px 30px;
     border: 5px double #555555;
     background-color: rgb(255, 255, 255);
+}
+
+#enemy-hands{
+    display: flex;
+}
+
+.enemy-hand{
+    width: 70px;      /* お好みの固定サイズに */
+    height: 100px;      /* ↑ ここがポイント */
+    overflow: hidden;  /* 必要に応じて中身のはみ出し対策 */
+    white-space: nowrap;  /* テキスト折返し防止（必要に応じて） */
+    text-overflow: ellipsis; /* 長い文字列の処理 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 5px double #555555;
+    margin: 100px 15px 0 15px;
+    background-color: rgb(52, 54, 202);
+}
+
+#my-hands{
+    display: flex;
+}
+
+.my-hand{
+    width: 70px;      /* お好みの固定サイズに */
+    height: 100px;      /* ↑ ここがポイント */
+    overflow: hidden;  /* 必要に応じて中身のはみ出し対策 */
+    white-space: nowrap;  /* テキスト折返し防止（必要に応じて） */
+    text-overflow: ellipsis; /* 長い文字列の処理 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 5px double #555555;
+    margin: 0 15px 70px 15px;
+    background-color: rgb(104, 106, 201);
+}
+
+.my-number{
+
+    font-family: "M PLUS Rounded 1c", sans-serif;
+}
+
+.enemy-number{
+    font-family: "M PLUS Rounded 1c", sans-serif;
+}
+
+.my-shield {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 30px;
+    background-color: rgb(0, 140, 255);
+    border-radius: 5px;
+    border: 2px solid #555;
+    z-index: 5;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.my-charge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60px;
+    height: 30px;
+    background-color: gold;
+    border-radius: 5px;
+    border: 2px solid #555;
+    z-index: 5;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.enemy-shield{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60px;
+    height: 30px;
+    background-color: rgb(0, 140, 255);
+    border-radius: 5px;
+    border: 2px solid #555;
+    z-index: 5;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+}
+
+.enemy-charge{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 30px;
+    background-color: gold;
+    border-radius: 5px;
+    border: 2px solid #555;
+    z-index: 5;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;    
 }
