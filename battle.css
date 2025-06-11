@@ -70,12 +70,10 @@ html, body {
 }
 
 #enemy-cards{
-    font-size: 3vw;
     display: flex;
 }
 
 #my-cards{
-    font-size: 3vw;
     display: flex;
 }
 
@@ -178,11 +176,12 @@ html, body {
 }
 
 .my-number{
-
+    font-size: 3vw;
     font-family: "M PLUS Rounded 1c", sans-serif;
 }
 
 .enemy-number{
+    font-size: 3vw;
     font-family: "M PLUS Rounded 1c", sans-serif;
 }
 
