@@ -278,6 +278,7 @@ html, body {
 }
 
 #charge, #attack, #tokkou{
+    font-size: 2vw;
     margin-top:1.3vw;
     color: white;
     background: rgb(255, 0, 0);
@@ -287,6 +288,7 @@ html, body {
 }
 
 #change, #shield, #block{
+    font-size: 2vw;
     margin-top:1.3vw;
     color: white;
     background: rgb(0, 34, 255);
