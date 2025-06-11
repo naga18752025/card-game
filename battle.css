@@ -61,8 +61,6 @@ html, body {
 }
 
 #main{
-    margin-top: 2vh;
-    margin-bottom: 2vh;
     background-color: rgb(255, 255, 255);
     padding:3.3vw 3% 3.3vw 3%;
     border-radius: 10px;
@@ -87,9 +85,9 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1vw double #555555;
     margin: 0 2.5vw 0 2.5vw;
-    background-color: rgb(52, 54, 202);
+    border: 1vw double #515151;
+    background: linear-gradient(145deg, rgb(180, 161, 222), rgb(123, 54, 183));
 }
 
 .card-left{
@@ -111,15 +109,15 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1vw double #555555;
     margin: 0 2.5vw 0 2.5vw;
-    background-color: rgb(104, 106, 201);
+    border: 1vw double #515151;
+    background-color:  rgb(206, 195, 229);
 }
 
 #yamahuda-sutehuda{
     display: flex;
     justify-content: flex-start;
-    margin:40px 0 40px 0;
+    margin:2vw 0 2vw 0;
     width:100%;
 }
 
@@ -127,8 +125,8 @@ html, body {
     margin-right: auto;
     width: 11.9vw;      /* お好みの固定サイズに */
     height: 17vw; 
-    border: 1vw double #555;
-    background-color: rgb(52, 54, 202);
+    border: 1vw double #515151;
+    background: linear-gradient(145deg, rgb(180, 161, 222), rgb(123, 54, 183));
 }
 
 #sutehuda{
@@ -152,9 +150,9 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1vw double #555555;
     margin: 17vw 2.5vw 0 2.5vw;
-    background-color: rgb(52, 54, 202);
+    border: 1vw double #515151;
+    background: linear-gradient(145deg, rgb(180, 161, 222), rgb(123, 54, 183));
 }
 
 #my-hands{
@@ -170,9 +168,9 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1vw double #555555;
     margin: 0 2.5vw 10vw 2.5vw;
-    background-color: rgb(104, 106, 201);
+    border: 1vw double #515151;
+    background-color:  rgb(206, 195, 229);
 }
 
 .my-number{
@@ -219,6 +217,22 @@ html, body {
     justify-content: center;
 }
 
+.active {
+  animation: slowBlink 1.5s ease-in-out infinite;
+}
+
+@keyframes slowBlink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }  
+}
+
 .enemy-shield{
     position: absolute;
     bottom: 0;
@@ -253,6 +267,64 @@ html, body {
     justify-content: center;    
 }
 
-#my-name, #enemy-name{
+#kougekikei{
+    display: flex;
+    flex-direction: column;
+}
+
+#boueikei{
+    display: flex;
+    flex-direction: column;  
+}
+
+#charge, #attack, #tokkou{
+    margin-top:1.3vw;
+    color: white;
+    background: rgb(255, 0, 0);
+    border: 0.4vw solid black;
+    border-radius: 0.4vw;
+    box-shadow: 0.4vw 0.4vw 0px rgb(101, 101, 101);
+}
+
+#change, #shield, #block{
+    margin-top:1.3vw;
+    color: white;
+    background: rgb(0, 34, 255);
+    border: 0.4vw solid black;
+    border-radius: 0.4vw;
+    box-shadow: 0.4vw 0.4vw 0px rgb(101, 101, 101);
+}
+
+#charge:hover, #attack:hover, #tokkou:hover, #change:hover, #shield:hover, #block:hover{
+    box-shadow: none;
+}
+
+.selected{
+    color:red;
+}
+
+#start-message {
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  color: white;
+  padding: 10vw 20vw;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 1rem;
+  z-index: 9999;
+}
+
+p{
+    display: flex;
+    justify-content: center;
     font-size: 3vw;
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5); /* 黒 + 半透明 */
 }

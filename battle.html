@@ -14,70 +14,96 @@
         </div>
         <div id="enemy-hands">
             <div class="enemy-hand hand-left"></div>
-            <div class="enemy-hand"></div>
+            <div class="enemy-hand hand-center"></div>
             <div class="enemy-hand hand-right"></div>
+            <div class="enemy-hand enemy-hand-dummy"></div>
+            <div class="enemy-hand enemy-hand-dummy"></div>
+            <div class="enemy-hand enemy-hand-dummy"></div>            
         </div>
         <div>
+            <p><span id="enemy-point">0</span>点</p>            
             <p id="enemy-name">nakazawa</p>
         </div>
         <div class="container" id="main">
-            <div id="enemy-cards">
+            <div id="enemy-cards" style="display: none;">
                 <div class="enemy-card card-left">
                     <div class="enemy-shield">🛡️1🛡️</div>
-                    <p id="enemy-card-left-number"></p>
-                    <div class="enemy-charge">🔋?🔋</div>   
+                    <p id="enemy-card-left-number my-number"></p>
+                    <div class="enemy-charge" style="display: none;">🔋?🔋</div>   
                 </div>
                 <div class="enemy-card">
                     <div class="enemy-shield">🛡️1🛡️</div>
-                    <p id="enemy-card-left-number"></p>
-                    <div class="enemy-charge">🔋?🔋</div>   
+                    <p id="enemy-card-center-number my-number"></p>
+                    <div class="enemy-charge" style="display: none;">🔋?🔋</div>   
                 </div>
                 <div class="enemy-card card-right">
                     <div class="enemy-shield">🛡️1🛡️</div>
-                    <p id="enemy-card-left-number"></p>
-                    <div class="enemy-charge">🔋?🔋</div>   
+                    <p id="enemy-card-right-number my-number"></p>
+                    <div class="enemy-charge" style="display: none;">🔋?🔋</div>   
                 </div>
             </div>
             <div id="yamahuda-sutehuda">
                 <div id="yamahuda"></div>
                 <div id="sutehuda"></div>
             </div>
-            <div id="my-cards">
+            <div id="my-cards" style="display: none;">
                 <div class="my-card card-left">
                     <div class="my-shield">🛡️1🛡️</div>
-                    <p id="my-card-left-number" class="my-number">10</p>   
+                    <p id="my-card-left-number" class="my-number"></p>   
                     <div class="my-charge">🔋5🔋</div>                 
                 </div>
                 <div class="my-card">
                     <div class="my-shield">🛡️3🛡️</div>
-                    <p id="my-card-center-number" class="my-number">Q</p>
+                    <p id="my-card-center-number" class="my-number"></p>
                     <div class="my-charge">🔋7🔋</div>
                 </div>
                 <div class="my-card card-right">
                     <div class="my-shield">🛡️2🛡️</div>
-                    <p id="my-card-right-number" class="my-number">K</p>
+                    <p id="my-card-right-number" class="my-number"></p>
                     <div class="my-charge">🔋10🔋</div>
                 </div>
+                
             </div>
         </div>
         <div>
-            <p id="enemy-name">naga</p>
+            <p id="my-name"></p>
+            <p><span id="my-point">0</span>点</p>
         </div>
         <div id="my-hands">
-            <div class="my-hand hand-left">
-                <p id="my-hand-left-number" class="my-number">1</p>
+            <div id="kougekikei" style="display: none;">
+                <button id="charge" class="kougeki">チャージ</button>
+                <button id="attack" class="kougeki">アタック</button>
+                <button id="tokkou" class="kougeki">トッコウ</button>
             </div>
-            <div class="my-hand">
-                <p id="my-hand-center-number" class="my-number">2</p>                
+            <div class="my-hand active">
+                <p class="my-number my-hand-number">2</p>
             </div>
-            <div class="my-hand hand-right">
-                <p id="my-hand-right-number" class="my-number">K</p>                
+            <div class="my-hand active">
+                <p class="my-number my-hand-number">8</p>                
+            </div>
+            <div class="my-hand active">
+                <p class="my-number my-hand-number">K</p>                
+            </div>
+            <div class="my-hand active">
+                <p class="my-number my-hand-number">7</p>
+            </div>
+            <div class="my-hand active">
+                <p class="my-number my-hand-number">3</p>                
+            </div>
+            <div class="my-hand active">
+                <p class="my-number my-hand-number">J</p>                
+            </div>
+            <div id="boueikei" style="display: none;">
+                <button id="change" class="bouei">チェンジ</button>
+                <button id="shield" class="bouei">シールド</button>
+                <button id="block" class="bouei">ブロック</button>
             </div>
         </div>
         <div id="shita">
             <p id="loginName"></p>
         </div>
-    </div>    
+    </div>
+    <div id="start-message" style="display: none;">対戦開始！</div>    
     <script src="battle.js" defer></script>
 </body>
 </html>
