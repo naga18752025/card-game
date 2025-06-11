@@ -1,0 +1,120 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: rgb(249, 252, 255);
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: inherit;
+}
+
+/* 上部バー */
+#ue {
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  background-color: hsl(211, 100%, 95%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  padding: 16px 0;
+}
+
+#ue h1 {
+  text-align: center;
+  font-size: 6vw;
+  margin: 0;
+  font-family: "Kokoro";
+}
+
+/* 下部バー */
+
+#shita {
+  position: fixed;
+  bottom: 0;
+  z-index: 10;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 -4px 8px -2px rgba(0, 0, 0, 0.2);
+  padding: 12px 0;
+  text-align: center;
+}
+
+#shita p {
+  margin: 0;
+  font-size: 3vw;
+  color: #555;
+}
+
+/* メイン全体 */
+.container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#main{
+    margin-top: 20vh;
+    margin-bottom: 20vh;
+    background-color: rgb(255, 255, 255);
+    padding:20px 3% 20px 3%;
+    border-radius: 10px;
+    border: 2px solid rgb(0, 0, 0);
+}
+
+#enemy-cards{
+    display: flex;
+}
+
+#my-cards{
+    display: flex;
+}
+
+.enemy-card{
+    padding: 45px 30px;
+    margin: 0 15px 0 15px;
+    border: 5px double #555;
+    background-color: rgb(52, 54, 202);
+}
+
+.card-left{
+    margin-left: 50px;
+}
+
+.card-right{
+    margin-right: 50px;
+}
+
+
+.my-card{
+    padding: 45px 30px;
+    margin: 0 15px 0 15px;
+    border: 5px double #555555;
+    background-color: rgb(52, 54, 202);
+}
+
+#yamahuda-sutehuda{
+    display: flex;
+    justify-content: flex-start;
+    margin:40px 0 40px 0;
+    width:100%;
+}
+
+#yamahuda{
+    margin-right: auto;
+    padding: 45px 30px;
+    border: 5px double #555;
+    background-color: rgb(52, 54, 202);
+}
+
+#sutehuda{
+    margin-left: auto;
+    padding: 45px 30px;
+    border: 5px double #555555;
+    background-color: rgb(255, 255, 255);
+}

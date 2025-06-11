@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>トランプゲーム</title>
+    <link rel="stylesheet" href="login.css" />
+    <link href="https://fonts.googleapis.com/earlyaccess/kokoro.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="ue">
+            <h1>トランプゲーム</h1>
+        </div>
+        <div class="container" id="main">
+            <h2 id="top">ログイン</h2>
+
+            <div class="form-group">
+                <label for="username" class="moji">ユーザー名</label>
+                <input type="text" id="username" name="username" placeholder="ユーザー名を入力">
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="moji">パスワード</label>
+                <input type="password" id="password" name="password" placeholder="パスワードを入力">
+            </div>
+
+            <div class="form-group">
+                <button id="loginButton" onclick="registerUser()">送信</button>
+            </div>
+        </div>
+        <div id="shita">
+            <p>未ログイン</p>
+        </div>
+    </div>
+    <script src="login.js" defer></script>
+</body>
+</html>

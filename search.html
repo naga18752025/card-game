@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>トランプゲーム</title>
+    <link rel="stylesheet" href="search.css" />
+    <script defer src="script.js"></script>
+    <link href="https://fonts.googleapis.com/earlyaccess/kokoro.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="ue">
+            <h1>トランプゲーム</h1>
+        </div>
+        <button id="wait" onclick="wait()">対戦相手を募る</button>
+        <div id="waitRoom" style="display: none">
+            <p id="roomName"></p>
+            <p class="loading">参加者を待っています<span>.</span><span>.</span><span>.</span></p>
+        </div>
+        <button id="join" onclick="join()">対戦相手を探す</button>
+        <div id="joinRoom" style="display: none;"></div>
+        <div id="back" style="display: none;">
+            <button onclick="back()">戻る</button>
+        </div>
+        <div id="back2" style="display: none;">
+            <button onclick="join()">更新</button>
+            <button onclick="back2()">戻る</button>
+        </div>
+        <div id="topback">
+            <button id="topbackbutton" onclick="topback()">TOPページへ戻る</button>
+        </div>
+        <div id="shita">
+            <p id="loginName"></p>
+        </div>
+    </div>
+    <script src="search.js" defer></script>
+</body>
+</html>
