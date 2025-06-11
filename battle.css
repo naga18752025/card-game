@@ -70,10 +70,12 @@ html, body {
 }
 
 #enemy-cards{
+    font-size: 3vw;
     display: flex;
 }
 
 #my-cards{
+    font-size: 3vw;
     display: flex;
 }
 
