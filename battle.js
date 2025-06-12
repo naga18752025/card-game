@@ -1,3 +1,4 @@
+// ログインチェック
 function nameExistCheck(){
     Name = localStorage.getItem("username");
     if(Name.length > 1){
@@ -10,6 +11,8 @@ function nameExistCheck(){
 
 nameExistCheck();
 
+
+// 山札作成
 function createDeck() {
     const suits = ['♠', '♥', '♦', '♣'];  // 絵柄（省略してもOK）
     const deck = [];
@@ -37,6 +40,8 @@ const deck = createDeck();
 
 let setCount = 0;
 
+
+// 初手札６枚数字設定
 function firstHand(){
     document.querySelectorAll(".my-hand-number").forEach(first => {
         first.textContent = deck[setCount];
@@ -46,10 +51,13 @@ function firstHand(){
 
 firstHand();
 
+
 let enemyCardLeftNumber = 10;
 let enemyCardCenterNumber = 10;
 let enemyCardRightNumber = 10;
-let setcard = 0;
+
+
+// 鍵管理
 let action = true;
 let charge = true;
 let attack = true;
@@ -63,6 +71,19 @@ let bouei = true;
 const cells = document.querySelectorAll('.my-hand');
 
 document.body.classList.add("overlay");
+
+
+// 対戦開始！
+document.getElementById("message").style.display = "block";
+
+// 数秒後に自動で消す
+setTimeout(() => {
+    document.getElementById("message").style.display = "none";
+}, 2000); // 2秒後に非表示
+
+
+// セットカード設定
+let setcard = 0;
 
 cells.forEach(cell => {
     cell.addEventListener('click', () => {
@@ -83,6 +104,12 @@ cells.forEach(cell => {
                 cell.classList.add("selected");
                 document.body.classList.remove("overlay");
                 vanishCard();
+                document.getElementById("message").textContent = "自分のターン";
+                document.getElementById("message").style.display = "block";
+                // 数秒後に自動で消す
+                setTimeout(() => {
+                    document.getElementById("message").style.display = "none";
+                }, 2000); // 2秒後に非表示               
             };
             setcard++;
         }
@@ -99,41 +126,40 @@ function vanishCard() {
     });
     document.querySelectorAll(".my-hand").forEach(hand => {
         hand.classList.remove("active")
-    });
-    // 対戦開始！
-    document.getElementById("start-message").style.display = "block";
-
-    // 数秒後に自動で消す（任意）
-    setTimeout(() => {
-        document.getElementById("start-message").style.display = "none";
-    }, 2000); // 2秒後に非表示
+    });    
 }
 
-// チャージ構造
+
+// チャージ構造　多分OK
 document.getElementById("charge").addEventListener("click", function(){
     if(charge && action && kougeki){     
         document.querySelectorAll(".my-hand").forEach(hand => {
-            hand.classList.add("active");
-            charge = false;
-            action = false;
+            if(hand.querySelector(".my-hand-number").textContent.replace(/\s/g, "") !== "JOKER"){
+                hand.classList.add("active");
+            };               
         });
+        charge = false;
+        action = false;
         document.getElementById("attack").style.display = "none";
         document.getElementById("tokkou").style.display = "none"; 
         document.body.classList.add("overlay");
     }else if(!charge && !action){                 
         document.querySelectorAll(".my-hand").forEach(hand => {
-            hand.classList.remove("active");
-            charge = true; 
-            action = true;      
+            hand.classList.remove("active");                
         });
         document.querySelectorAll(".my-card").forEach(card => {
             card.classList.remove("active");    
         });
+        charge = true; 
+        action = true; 
         chargeSelect = true;  
         document.getElementById("attack").style.display = "flex";
         document.getElementById("tokkou").style.display = "flex";        
         document.body.classList.remove("overlay");
-        document.querySelector(".selected").classList.remove("selected");
+        document.getElementById("main").style.backgroundColor = "#fff";
+        if(document.querySelector(".selected")){
+            document.querySelector(".selected").classList.remove("selected");  
+        };  
     };
 })
 
@@ -142,21 +168,27 @@ document.getElementById("attack").addEventListener("click", function(){
     if(attack && action && kougeki){
         document.querySelectorAll(".my-card").forEach(shield => {
             shield.classList.add("active");
-            attack = false;
-            action = false;
+            
         });
+        attack = false;
+        action = false;
         document.getElementById("charge").style.display = "none";
         document.getElementById("tokkou").style.display = "none"; 
         document.getElementById("main").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
     }else if(!attack && !action){
         document.querySelectorAll(".my-card").forEach(shield => {
             shield.classList.remove("active");
-            attack = true;
-            action = true;
+            
         }); 
+        attack = true;
+        action = true;
         document.getElementById("charge").style.display = "flex";
         document.getElementById("tokkou").style.display = "flex";       
+        document.body.classList.remove("overlay");
         document.getElementById("main").style.backgroundColor = "#fff";
+        if(document.querySelector(".selected")){
+            document.querySelector(".selected").classList.remove("selected");  
+        };  
     };
 })
 
@@ -164,54 +196,72 @@ document.getElementById("attack").addEventListener("click", function(){
 document.getElementById("tokkou").addEventListener("click", function(){
     if(tokkou && action && kougeki){
         document.querySelectorAll(".my-card").forEach(card => {
-            card.classList.add("active");
-            tokkou = false;
-            action = false;
+            card.classList.add("active");    
         });
+        tokkou = false;
+        action = false;
         document.getElementById("charge").style.display = "none";
         document.getElementById("attack").style.display = "none"; 
         document.getElementById("main").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
     }else if(!tokkou && !action){
         document.querySelectorAll(".my-card").forEach(card => {
             card.classList.remove("active");
-            tokkou = true;
-            action = true;
+            
         }); 
+        document.querySelectorAll(".my-hand").forEach(hand => {
+            hand.classList.remove("active");   
+        }); 
+        tokkou = true;
+        action = true;            
         document.getElementById("charge").style.display = "flex";
         document.getElementById("attack").style.display = "flex"; 
-        document.getElementById("main").style.backgroundColor = "#fff";               
+        document.body.classList.remove("overlay");
+        document.getElementById("main").style.backgroundColor = "#fff";
+        if(document.querySelector(".selected")){
+            document.querySelector(".selected").classList.remove("selected");  
+        };               
     };
 })
 
 // チェンジ構造
 document.getElementById("change").addEventListener("click", function(){
-    if(change && action){
-        document.querySelectorAll(".my-card").forEach(card => {
-            card.classList.add("active");      
-            change = false;
-            action = false;
+    if(change && action && bouei){
+        document.querySelectorAll(".my-hand").forEach(hand => {
+            hand.classList.add("active");                  
         });
+        change = false;
+        action = false;
         document.getElementById("shield").style.display = "none";
         document.getElementById("block").style.display = "none";      
-        document.getElementById("main").style.backgroundColor = "rgba(0, 0, 0, 0.5)";        
+        document.body.classList.add("overlay");       
     }else if(!change && !action){
         document.querySelectorAll(".my-card").forEach(card => {
-            card.classList.remove("active");            
-            change = true;
-            action = true;
+            card.classList.remove("active");                       
         });
+        document.querySelectorAll(".my-hand").forEach(hand => {
+            hand.classList.remove("active");   
+        });  
+        change = true;
+        action = true;       
+        changeSelect = true;
         document.getElementById("shield").style.display = "flex";
         document.getElementById("block").style.display = "flex";   
-        document.getElementById("main").style.backgroundColor = "#fff";               
+        document.body.classList.remove("overlay");
+        document.getElementById("main").style.backgroundColor = "#fff";
+        if(document.querySelector(".selected")){
+            document.querySelector(".selected").classList.remove("selected");  
+        };             
     };
 })
 
-// シールド構造
+// シールド構造　多分OK
 document.getElementById("shield").addEventListener("click", function(){
-    if(shield && action){
+    if(shield && action && bouei){
         let miniNumber = false;
         document.querySelectorAll(".my-hand-number").forEach(number => {
-            if(parseInt(number.textContent.match(/\d+/)[0]) === 1 || parseInt(number.textContent.match(/\d+/)[0]) === 2 || parseInt(number.textContent.match(/\d+/)[0]) === 3){
+            if(number.textContent.replace(/\s/g, "") === "JOKER"){
+
+            }else if(parseInt(number.textContent.match(/\d+/)[0]) === 1 || parseInt(number.textContent.match(/\d+/)[0]) === 2 || parseInt(number.textContent.match(/\d+/)[0]) === 3){
                 number.parentElement.classList.add("miniNumber");      
                 miniNumber = true;
             };
@@ -221,32 +271,42 @@ document.getElementById("shield").addEventListener("click", function(){
             return;
         };
         document.querySelectorAll(".miniNumber").forEach(hand => {
-            hand.classList.add("active");
-            document.body.classList.add("overlay");
-            shield = false;
-            action = false;
+            hand.classList.add("active");            
         });
+        shield = false;
+        action = false;
         document.getElementById("change").style.display = "none";
-        document.getElementById("block").style.display = "none";   
+        document.getElementById("block").style.display = "none"; 
+        document.body.classList.add("overlay");  
     }else if(!shield && !action){
         document.querySelectorAll(".miniNumber").forEach(hand => {
             hand.classList.remove("active");
-            hand.classList.remove("miniNumber");
-            shield = true;
-            action = true;
-        }); 
-        document.body.classList.remove("overlay");
+            hand.classList.remove("miniNumber");            
+        });        
+        document.querySelectorAll(".my-card").forEach(card => {
+            card.classList.remove("active");   
+        });  
+        shield = true;
+        action = true;         
+        shieldSelect = true;      
         document.getElementById("change").style.display = "flex";
-        document.getElementById("block").style.display = "flex";          
+        document.getElementById("block").style.display = "flex";  
+        document.body.classList.remove("overlay");
+        document.getElementById("main").style.backgroundColor = "#fff";
+        if(document.querySelector(".selected")){
+            document.querySelector(".selected").classList.remove("selected");  
+        };                    
     };
 })
 
 // ブロック構造
 document.getElementById("block").addEventListener("click", function(){
-    if(block && action){
+    if(block && action && bouei){
         let miniNumber = false;
         document.querySelectorAll(".my-hand-number").forEach(number => {
-            if(parseInt(number.textContent.match(/\d+/)[0]) === 1 || parseInt(number.textContent.match(/\d+/)[0]) === 2 || parseInt(number.textContent.match(/\d+/)[0]) === 3){
+            if(number.textContent.replace(/\s/g, "") === "JOKER"){
+
+            }else if(parseInt(number.textContent.match(/\d+/)[0]) === 1 || parseInt(number.textContent.match(/\d+/)[0]) === 2 || parseInt(number.textContent.match(/\d+/)[0]) === 3){
                 number.parentElement.classList.add("miniNumber");
                 miniNumber = true;
             };
@@ -257,9 +317,10 @@ document.getElementById("block").addEventListener("click", function(){
         };
         document.querySelectorAll(".miniNumber").forEach(hand => {
             hand.classList.add("active");
-            block = false;
-            action = false;
+            
         });
+        block = false;
+        action = false;
         document.getElementById("change").style.display = "none";
         document.getElementById("shield").style.display = "none"; 
         document.body.classList.add("overlay");
@@ -267,20 +328,30 @@ document.getElementById("block").addEventListener("click", function(){
         document.querySelectorAll(".miniNumber").forEach(hand => {
             hand.classList.remove("active");
             hand.classList.remove("miniNumber");
-            block = true;
-            action = true;
+            
         }); 
+        block = true;
+        action = true;
         document.getElementById("change").style.display = "flex";
         document.getElementById("shield").style.display = "flex";         
-        document.body.classList.remove("overlay");       
+        document.body.classList.remove("overlay");
+        document.getElementById("main").style.backgroundColor = "#fff";
+        if(document.querySelector(".selected")){
+            document.querySelector(".selected").classList.remove("selected");  
+        };        
     };
 })
 
+// 監視用鍵管理
 chargeSelect = true;
+shieldSelect = true;
+changeSelect = true;
 
+
+// 手札監視
 document.querySelectorAll(".my-hand").forEach(hand => {
     hand.addEventListener("click", function(){
-        if(!charge && chargeSelect){
+        if(!charge && chargeSelect && (hand.querySelector(".my-hand-number").textContent.replace(/\s/g, "") !== "JOKER")){ // チャージボタン有効状態　かつ　チャージ用カード選択前
             hand.querySelector("p").classList.add("selected");
             document.querySelectorAll(".my-hand").forEach(hand => {
                 hand.classList.remove("active");    
@@ -288,26 +359,49 @@ document.querySelectorAll(".my-hand").forEach(hand => {
             document.querySelectorAll(".my-card").forEach(card => {
                 card.classList.add("active");    
             });
+            document.body.classList.remove("overlay");
+            document.getElementById("main").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
             chargeSelect = false;              
-        }else if(!chargeSelect && document.querySelector(".selected")){
+        }else if(!chargeSelect && (hand.querySelector(".my-hand-number").textContent.replace(/\s/g, "") !== "JOKER")){ // チャージ用カード選択後
             document.querySelector(".selected").classList.remove("selected");
             hand.classList.add("selected");
-        }else if(hand.classList.contains("miniNumber")){
+        }else if(!shield && shieldSelect && (hand.classList.contains("miniNumber"))){ // シールド有効状態　かつ　シールド用カード選択前
             hand.querySelector("p").classList.add("selected");
             document.querySelectorAll(".my-hand").forEach(hand => {
                 hand.classList.remove("active");    
             });
             document.querySelectorAll(".my-card").forEach(card => {
                 card.classList.add("active");    
-            });                                  
+            });
+            document.body.classList.remove("overlay");
+            document.getElementById("main").style.backgroundColor = "rgba(0, 0, 0, 0.5)";            
+            shieldSelect = false;                                  
+        }else if(!shieldSelect && (hand.classList.contains("miniNumber"))){ // シールド用カード選択後
+            document.querySelector(".selected").classList.remove("selected");
+            hand.classList.add("selected");            
+        }else if(!change && changeSelect){ //　チェンジ有効状態　かつ　チェンジ用カード選択前
+            hand.querySelector("p").classList.add("selected");
+            document.querySelectorAll(".my-hand").forEach(hand => {
+                hand.classList.remove("active");
+            document.querySelectorAll(".my-card").forEach(card => {
+                card.classList.add("active");    
+            });
+            document.body.classList.remove("overlay");
+            document.getElementById("main").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+            changeSelect = false;                    
+            });            
+        }else if(!changeSelect){ // チェンジ用カード選択後
+            document.querySelector(".selected").classList.remove("selected");
+            hand.classList.add("selected");            
         };
     });
 })
 
+// セットカード監視
 document.querySelectorAll(".my-card").forEach(card => {
     card.addEventListener("click", function(){
-        if(!chargeSelect){
-            if(parseInt(card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0]) +  parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]) <= parseInt(card.querySelector(".my-number").textContent.match(/\d+/)[0])){           
+        if(!chargeSelect){ // チャージ用カード選択後  // ↓チャージ合計がセットカードの数を超えていないかとJOKERの確認
+            if(card.querySelector(".my-number").textContent.replace(/\s/g, "") === "JOKER"){
                 card.querySelector(".my-charge").querySelector("span").textContent = String(parseInt(card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0]) + parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]));
                 card.querySelector(".my-charge").style.display = "flex";
                 chargeSelect = true;
@@ -317,23 +411,92 @@ document.querySelectorAll(".my-card").forEach(card => {
                 document.body.classList.remove("overlay");
                 charge = true;
                 action = true;
-                document.getElementById("attack").style.display = "flex";
-                document.getElementById("tokkou").style.display = "flex";
+                chargeSelect = true;
                 kougekiTeishi(); 
                 document.querySelector(".selected").textContent = deck[setCount]; 
                 setCount ++;                                                    
                 document.querySelector(".selected").classList.remove("selected");
+                document.getElementById("main").style.backgroundColor = "#fff";               
+            }else if(parseInt(card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0]) +  parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]) <= parseInt(card.querySelector(".my-number").textContent.match(/\d+/)[0])){           
+                card.querySelector(".my-charge").querySelector("span").textContent = String(parseInt(card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0]) + parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]));
+                card.querySelector(".my-charge").style.display = "flex";
+                chargeSelect = true;
+                document.querySelectorAll(".my-card").forEach(card => {
+                    card.classList.remove("active");
+                });
+                document.body.classList.remove("overlay");
+                charge = true;
+                action = true;
+                chargeSelect = true;
+                kougekiTeishi(); 
+                document.querySelector(".selected").textContent = deck[setCount]; 
+                setCount ++;                                                    
+                document.querySelector(".selected").classList.remove("selected");
+                document.getElementById("main").style.backgroundColor = "#fff"; 
             }else{
                 alert("セットカードの数を超えてしまいます");
-            }
+            };
+        }else if(!shieldSelect){ // シールド用カード選択後
+            if(card.querySelector(".my-shield").querySelector("span").textContent === ""){
+                card.querySelector(".my-shield").querySelector("span").textContent = String(parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]));
+                card.querySelector(".my-shield").style.display = "flex";
+                document.querySelectorAll(".my-card").forEach(card => {
+                    card.classList.remove("active");
+                });
+                document.getElementById("main").style.backgroundColor = "#fff";
+                shield = true;
+                action = true; 
+                shieldSelect = true;  
+                boueiTeishi();
+                document.querySelector(".selected").textContent = deck[setCount]; 
+                setCount ++;
+                document.querySelector(".selected").classList.remove("selected");                                                         
+            };
+        }else if(!changeSelect){ // チェンジ用カード選択後
+            card.querySelector(".my-number").textContent = document.querySelector(".selected").textContent;
+            document.querySelectorAll(".my-card").forEach(card => {
+                card.classList.remove("active");
+            });
+            change = true;
+            action = true;
+            changeSelect = true;   
+            boueiTeishi();            
+            document.querySelector(".selected").textContent = deck[setCount]; 
+            setCount ++;   
+            document.querySelector(".selected").classList.remove("selected");
+            document.getElementById("main").style.backgroundColor = "#fff";            
         };
     });
 })
 
+// 攻撃停止
 function kougekiTeishi(){
-                document.getElementById("charge").style.backgroundColor = "rgba(0, 0, 0, 0.5)";  
-                document.getElementById("attack").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-                document.getElementById("tokkou").style.backgroundColor = "rgba(0, 0, 0, 0.5)";    
-                kougeki = false;
+    document.getElementById("charge").style.display = "flex";
+    document.getElementById("attack").style.display = "flex";
+    document.getElementById("tokkou").style.display = "flex";
+    document.getElementById("charge").style.backgroundColor = "rgba(0, 0, 0, 0.5)";  
+    document.getElementById("attack").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    document.getElementById("tokkou").style.backgroundColor = "rgba(0, 0, 0, 0.5)";    
+    kougeki = false;
+    if(!bouei){
+        document.getElementById("message").textContent = "相手のターン中";
+        document.getElementById("message").classList.add("enemy-turn");
+        document.getElementById("message").style.display = "block";
+    }
+}
+
+function boueiTeishi(){
+    document.getElementById("change").style.display = "flex";
+    document.getElementById("shield").style.display = "flex";
+    document.getElementById("block").style.display = "flex";    
+    document.getElementById("change").style.backgroundColor = "rgba(0, 0, 0, 0.5)";  
+    document.getElementById("shield").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    document.getElementById("block").style.backgroundColor = "rgba(0, 0, 0, 0.5)";    
+    bouei = false;
+    if(!kougeki){
+        document.getElementById("message").textContent = "相手のターン中";
+        document.getElementById("message").classList.add("enemy-turn");
+        document.getElementById("message").style.display = "block";      
+    }
 }
 

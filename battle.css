@@ -236,6 +236,24 @@ html, body {
   }  
 }
 
+.enemy-turn {
+  animation: slowBlink 1.5s ease-in-out infinite;
+}
+
+@keyframes slowBlink {
+  0% {
+    opacity: 1;
+
+  }
+  50% {
+    opacity: 0.5;
+
+  }
+  100% {
+    opacity: 1;
+  }  
+}
+
 .enemy-shield{
     position: absolute;
     bottom: 0;
@@ -310,12 +328,12 @@ html, body {
     color:red;
 }
 
-#start-message {
+#message {
   position: fixed;
   align-items: center;
   justify-content: center;
   white-space: nowrap; 
-  top: 50%;
+  top: 52.5%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 3rem;
