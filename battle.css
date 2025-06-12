@@ -224,12 +224,15 @@ html, body {
 @keyframes slowBlink {
   0% {
     opacity: 1;
+    scale:1.0;
   }
   50% {
     opacity: 0.5;
+    scale:0.95;
   }
   100% {
     opacity: 1;
+    scale:1.0;
   }  
 }
 
@@ -323,12 +326,15 @@ html, body {
   z-index: 9999;
 }
 
-p{
+p, span{
+    font-family: "M PLUS Rounded 1c", sans-serif;
     display: flex;
     justify-content: center;
+    align-items: center;
     font-size: 3vw;
 }
 
 .overlay {
   background-color: rgba(0, 0, 0, 0.5); /* 黒 + 半透明 */
 }
+
