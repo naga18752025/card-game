@@ -378,7 +378,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
             shieldSelect = false;                                  
         }else if(!shieldSelect && (hand.classList.contains("miniNumber"))){ // シールド用カード選択後
             document.querySelector(".selected").classList.remove("selected");
-            hand.classList.add("selected");            
+            hand.querySelector("p").classList.add("selected");            
         }else if(!change && changeSelect){ //　チェンジ有効状態　かつ　チェンジ用カード選択前
             hand.querySelector("p").classList.add("selected");
             document.querySelectorAll(".my-hand").forEach(hand => {
@@ -392,7 +392,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
             });            
         }else if(!changeSelect){ // チェンジ用カード選択後
             document.querySelector(".selected").classList.remove("selected");
-            hand.classList.add("selected");            
+            hand.querySelector("p").classList.add("selected");            
         };
     });
 })
