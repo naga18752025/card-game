@@ -364,7 +364,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
             chargeSelect = false;              
         }else if(!chargeSelect && (hand.querySelector(".my-hand-number").textContent.replace(/\s/g, "") !== "JOKER")){ // チャージ用カード選択後
             document.querySelector(".selected").classList.remove("selected");
-            hand.classList.add("selected");
+            hand.querySelector("p").classList.add("selected");
         }else if(!shield && shieldSelect && (hand.classList.contains("miniNumber"))){ // シールド有効状態　かつ　シールド用カード選択前
             hand.querySelector("p").classList.add("selected");
             document.querySelectorAll(".my-hand").forEach(hand => {
