@@ -51,7 +51,7 @@ function firstHand(){
 
 firstHand();
 
-
+// 相手のセットカードの数
 let enemyCardLeftNumber = 10;
 let enemyCardCenterNumber = 10;
 let enemyCardRightNumber = 10;
@@ -117,6 +117,7 @@ cells.forEach(cell => {
     });
 });
 
+// いらないカード消し
 function vanishCard() {
     document.querySelectorAll(".selected").forEach(card => {
         card.remove();
@@ -166,10 +167,17 @@ document.getElementById("charge").addEventListener("click", function(){
 // アタック構造
 document.getElementById("attack").addEventListener("click", function(){
     if(attack && action && kougeki){
-        document.querySelectorAll(".my-card").forEach(shield => {
-            shield.classList.add("active");
-            
+        let chargeRyou = false;
+        document.querySelectorAll(".my-card").forEach(card => {
+            if((card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0] !== "0") && (card.querySelector(".my-number").textContent.replace(/\s/g, "") !== "JOKER")){
+                card.classList.add("active");
+                chargeRyou = true;
+            }    
         });
+        if(!chargeRyou){
+            alert("アタックできるセットカードがありません");
+            return;
+        }
         attack = false;
         action = false;
         document.getElementById("charge").style.display = "none";
@@ -182,10 +190,14 @@ document.getElementById("attack").addEventListener("click", function(){
         }); 
         attack = true;
         action = true;
+        attackSelect = true;
         document.getElementById("charge").style.display = "flex";
         document.getElementById("tokkou").style.display = "flex";       
         document.body.classList.remove("overlay");
         document.getElementById("main").style.backgroundColor = "#fff";
+        document.querySelectorAll(".enemy-card").forEach(card => {
+            card.classList.remove("active");
+        });
         if(document.querySelector(".selected")){
             document.querySelector(".selected").classList.remove("selected");  
         };  
@@ -223,7 +235,7 @@ document.getElementById("tokkou").addEventListener("click", function(){
     };
 })
 
-// チェンジ構造
+// チェンジ構造　多分OK
 document.getElementById("change").addEventListener("click", function(){
     if(change && action && bouei){
         document.querySelectorAll(".my-hand").forEach(hand => {
@@ -330,8 +342,12 @@ document.getElementById("block").addEventListener("click", function(){
             hand.classList.remove("miniNumber");
             
         }); 
+        document.querySelectorAll(".enemy-card").forEach(card => {
+            card.classList.remove("active");    
+            });       
         block = true;
         action = true;
+        blockSelect = true;
         document.getElementById("change").style.display = "flex";
         document.getElementById("shield").style.display = "flex";         
         document.body.classList.remove("overlay");
@@ -343,12 +359,14 @@ document.getElementById("block").addEventListener("click", function(){
 })
 
 // 監視用鍵管理
+attackSelect = true;
 chargeSelect = true;
 shieldSelect = true;
 changeSelect = true;
+blockSelect = true;
 
 
-// 手札監視
+// 自分の手札監視
 document.querySelectorAll(".my-hand").forEach(hand => {
     hand.addEventListener("click", function(){
         if(!charge && chargeSelect && (hand.querySelector(".my-hand-number").textContent.replace(/\s/g, "") !== "JOKER")){ // チャージボタン有効状態　かつ　チャージ用カード選択前
@@ -393,11 +411,25 @@ document.querySelectorAll(".my-hand").forEach(hand => {
         }else if(!changeSelect){ // チェンジ用カード選択後
             document.querySelector(".selected").classList.remove("selected");
             hand.querySelector("p").classList.add("selected");            
+        }else if(!block && blockSelect && (hand.classList.contains("miniNumber"))){ // ブロック有効状態　かつ　ブロック用カード選択前
+            hand.querySelector("p").classList.add("selected");
+            document.querySelectorAll(".my-hand").forEach(hand => {
+                hand.classList.remove("active");    
+            });
+            document.querySelectorAll(".enemy-card").forEach(card => {
+                card.classList.add("active");    
+            });
+            document.body.classList.remove("overlay");
+            document.getElementById("main").style.backgroundColor = "rgba(0, 0, 0, 0.5)";            
+            blockSelect = false;             
+        }else if(!blockSelect && (hand.classList.contains("miniNumber"))){ // ブロック用カード選択後
+            document.querySelector(".selected").classList.remove("selected");
+            hand.querySelector("p").classList.add("selected");              
         };
     });
 })
 
-// セットカード監視
+// 自分のセットカード監視
 document.querySelectorAll(".my-card").forEach(card => {
     card.addEventListener("click", function(){
         if(!chargeSelect){ // チャージ用カード選択後  // ↓チャージ合計がセットカードの数を超えていないかとJOKERの確認
@@ -465,9 +497,50 @@ document.querySelectorAll(".my-card").forEach(card => {
             setCount ++;   
             document.querySelector(".selected").classList.remove("selected");
             document.getElementById("main").style.backgroundColor = "#fff";            
+        }else if(!attack && attackSelect){ // アタック有効状態　かつ　アタック用カード選択前
+            if((card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0] !== "0") && (card.querySelector(".my-number").textContent.replace(/\s/g, "") !== "JOKER")){
+                document.querySelectorAll(".active").forEach(card => {
+                    card.classList.remove("active");
+                });
+                card.querySelector(".my-number").classList.add("selected");
+                document.querySelectorAll(".enemy-card").forEach(card => {
+                    card.classList.add("active");                    
+                });
+                attackSelect = false;
+            };
+        }else if(!attackSelect){
+            if((card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0] !== "0") && (card.querySelector(".my-number").textContent.replace(/\s/g, "") !== "JOKER")){
+                document.querySelector(".selected").classList.remove("selected");
+                card.querySelector(".my-number").classList.add("selected");
+            };            
         };
     });
 })
+
+
+// 相手のセットカード監視
+document.querySelectorAll(".enemy-card").forEach(card => {
+    card.addEventListener("click", function(){ // ブロック用カード選択後
+        if(!blockSelect){
+            if(card.querySelector(".enemy-block").style.display === "none"){
+                card.querySelector(".enemy-block").style.display = "flex";
+                document.querySelectorAll(".enemy-card").forEach(card => {
+                    card.classList.remove("active");
+                });
+                document.getElementById("main").style.backgroundColor = "#fff";
+                document.querySelector(".selected").textContent = deck[setCount];
+                setCount ++;
+                document.querySelector(".selected").classList.remove("selected");
+                block = true;
+                action = true;
+                blockSelect = true;
+                boueiTeishi();
+            };
+        }else if(!attackSelect){
+
+        };
+    });
+});
 
 // 攻撃停止
 function kougekiTeishi(){
@@ -500,3 +573,6 @@ function boueiTeishi(){
     }
 }
 
+document.querySelectorAll(".enemy-hand").forEach(hand => {
+    hand.style.backgroundColor = "#000"
+})    
