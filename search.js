@@ -110,6 +110,7 @@ function back2(){
 
 async function enemyLock(id_){
     const name = localStorage.getItem("username");
+    localStorage.setItem("enemyname", id_)
     const aite = id_;
     const { error: Error } = await supabase
         .from("waiters")
@@ -128,7 +129,7 @@ function topback(){
 
 function nameExistCheck(){
     Name = localStorage.getItem("username");
-    if(Name.length <1){
+    if(Name === null){
         window.location.href = "login.html";
     }else{
         document.getElementById("loginName").textContent = `${Name}としてログイン中`;

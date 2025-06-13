@@ -21,7 +21,7 @@ async function registerUser() {
         return;
     }
 
-    if (data.length > 0) {
+    if (data !== null) {
         alert("ログインに成功しました！");
         window.location.href = "battle2.html";
         return;
@@ -48,7 +48,7 @@ async function registerUser() {
 
 function nameExistCheck(){
     Name = localStorage.getItem("username");
-    if(Name.length > 1){
+    if(Name !== null){
         window.location.href = "search.html";
     }
 }

@@ -8,8 +8,10 @@ document.getElementById("start").addEventListener("click", function () {
 
 function nameExistCheck(){
     Name = localStorage.getItem("username");
-    if(Name.length > 1){
+    if(Name !== null){
       document.getElementById("loginName").textContent = `${Name}としてログイン中`;
+    }else{
+      document.getElementById("loginName").textContent = `未ログイン`;      
     }
 }
 
