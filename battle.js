@@ -1,7 +1,7 @@
 // ログインチェック
 function nameExistCheck(){
     Name = localStorage.getItem("username");
-    if(Name.length > 1){
+    if(Name !== null){
         document.getElementById("loginName").textContent = `${Name}としてログイン中`;
         document.getElementById("my-name").textContent = `${Name}`;        
     }else{
