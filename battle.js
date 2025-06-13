@@ -52,7 +52,7 @@ function firstHand(){
 firstHand();
 
 // 相手のセットカードの数
-let enemyCardLeftNumber = 10;
+let enemyCardLeftNumber = 1;
 let enemyCardCenterNumber = 10;
 let enemyCardRightNumber = 10;
 
@@ -164,7 +164,7 @@ document.getElementById("charge").addEventListener("click", function(){
     };
 })
 
-// アタック構造
+// アタック構造　途中
 document.getElementById("attack").addEventListener("click", function(){
     if(attack && action && kougeki){
         let chargeRyou = false;
@@ -208,7 +208,10 @@ document.getElementById("attack").addEventListener("click", function(){
 document.getElementById("tokkou").addEventListener("click", function(){
     if(tokkou && action && kougeki){
         document.querySelectorAll(".my-card").forEach(card => {
-            card.classList.add("active");    
+            if(card.querySelector(".my-number").textContent.replace(/\s/g, "") !== "JOKER"){
+                card.classList.add("active"); 
+            }
+                
         });
         tokkou = false;
         action = false;
@@ -224,11 +227,15 @@ document.getElementById("tokkou").addEventListener("click", function(){
             hand.classList.remove("active");   
         }); 
         tokkou = true;
-        action = true;            
+        action = true;  
+        tokkouSelect = true;          
         document.getElementById("charge").style.display = "flex";
         document.getElementById("attack").style.display = "flex"; 
         document.body.classList.remove("overlay");
         document.getElementById("main").style.backgroundColor = "#fff";
+        document.querySelectorAll(".enemy-card").forEach(card => {
+            card.classList.remove("active");
+        });        
         if(document.querySelector(".selected")){
             document.querySelector(".selected").classList.remove("selected");  
         };               
@@ -311,7 +318,7 @@ document.getElementById("shield").addEventListener("click", function(){
     };
 })
 
-// ブロック構造
+// ブロック構造　多分OK
 document.getElementById("block").addEventListener("click", function(){
     if(block && action && bouei){
         let miniNumber = false;
@@ -361,6 +368,7 @@ document.getElementById("block").addEventListener("click", function(){
 // 監視用鍵管理
 attackSelect = true;
 chargeSelect = true;
+tokkouSelect = true;
 shieldSelect = true;
 changeSelect = true;
 blockSelect = true;
@@ -508,11 +516,27 @@ document.querySelectorAll(".my-card").forEach(card => {
                 });
                 attackSelect = false;
             };
-        }else if(!attackSelect){
+        }else if(!attackSelect){ // アタック用カード選択後
             if((card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0] !== "0") && (card.querySelector(".my-number").textContent.replace(/\s/g, "") !== "JOKER")){
                 document.querySelector(".selected").classList.remove("selected");
                 card.querySelector(".my-number").classList.add("selected");
             };            
+        }else if(!tokkou && tokkouSelect){ // トッコウ有効状態　かつ　トッコウ用カード選択前
+            if(card.querySelector(".my-number").textContent.replace(/\s/g, "") !== "JOKER"){
+                document.querySelectorAll(".active").forEach(card => {
+                    card.classList.remove("active");
+                });
+                card.querySelector(".my-number").classList.add("selected");
+                document.querySelectorAll(".enemy-card").forEach(card => {
+                    card.classList.add("active");                    
+                });
+                tokkouSelect = false;
+            };          
+        }else if(!tokkouSelect){ // トッコウ用カード選択後
+            if(card.querySelector(".my-number").textContent.replace(/\s/g, "") !== "JOKER"){
+                document.querySelector(".selected").classList.remove("selected");
+                card.querySelector(".my-number").classList.add("selected");
+            };               
         };
     });
 })
@@ -536,8 +560,52 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 blockSelect = true;
                 boueiTeishi();
             };
-        }else if(!attackSelect){
+        }else if(!attackSelect){ // アタック用カード選択後
+            if(card.querySelector(".my-number").classList.contains("enemy-card-left-number")){
+                if(enemyCardLeftNumber <= parseInt(document.querySelector(".selected").parentElement.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0])){
 
+                    alert("attack succeeded");
+                }else{
+                    alert("attack failed");
+                };
+            }else if(card.querySelector(".my-number").classList.contains("enemy-card-center-number")){
+                if(enemyCardCenterNumber <= parseInt(document.querySelector(".selected").parentElement.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0])){
+
+                    alert("attack succeeded");
+                }else{
+                    alert("attack failed");
+                };
+            }else if(card.querySelector(".my-number").classList.contains("enemy-card-right-number")){
+                if(enemyCardRightNumber <= parseInt(document.querySelector(".selected").parentElement.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0])){
+
+                    alert("attack succeeded");
+                }else{
+                    alert("attack failed");
+                };
+            };
+        }else if(!tokkouSelect){
+            if(card.querySelector(".my-number").classList.contains("enemy-card-left-number")){
+                if(enemyCardLeftNumber <= parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0])){
+
+                    alert("tokkou succeeded");
+                }else{
+                    alert("tokkou failed");
+                };
+            }else if(card.querySelector(".my-number").classList.contains("enemy-card-center-number")){
+                if(enemyCardCenterNumber <= parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0])){
+
+                    alert("tokkou succeeded");
+                }else{
+                    alert("tokkou failed");
+                };
+            }else if(card.querySelector(".my-number").classList.contains("enemy-card-right-number")){
+                if(enemyCardRightNumber <= parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0])){
+
+                    alert("tokkou succeeded");
+                }else{
+                    alert("tokkou failed");
+                }; 
+            };           
         };
     });
 });
