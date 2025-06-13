@@ -23,7 +23,7 @@ async function registerUser() {
 
     if (data !== null) {
         alert("ログインに成功しました！");
-        window.location.href = "battle2.html";
+        window.location.href = "battle.html";
         return;
     }
 
@@ -42,7 +42,7 @@ async function registerUser() {
         alert("登録に失敗しました。");
     } else {
         alert("ユーザー登録が完了しました！");
-        window.location.href = "battle2.html";
+        window.location.href = "battle.html";
     }
 }
 
