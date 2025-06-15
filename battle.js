@@ -25,7 +25,13 @@ enemyExistCheck();
 
 // リロードチェック
 function reloadCheck(){
+    if(localStorage.getItem("reload") === "none"){
+        localStorage.setItem("reload, "done");
+    }else{
+        window.location.href = "search.html";
+    }
 }
+reloadCheck();
 
 // 名前登録
 const myName = localStorage.getItem("username");
