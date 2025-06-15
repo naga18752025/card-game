@@ -67,3 +67,17 @@ html, body {
     border: 2px solid rgb(0, 0, 0);
 }
 
+#topbackbutton{
+    padding: 5px;
+    font-size: 12px;
+    background-color: rgb(246, 246, 246);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 3px #828282;
+    color: black;
+    font-family: "M PLUS Rounded 1c";
+}
+
+#topbackbutton:hover{
+    background-color:rgb(203, 203, 203);
+}

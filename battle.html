@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="battle.css" />
     <link href="https://fonts.googleapis.com/earlyaccess/kokoro.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
 </head>
 <body>
     <div class="container">
@@ -22,27 +24,27 @@
         </div>
         <div>
             <p><span id="enemy-point">0</span>点</p>            
-            <p id="enemy-name">nakazawa</p>
+            <p id="enemy-name"></p>
         </div>
         <div class="container" id="main">
             <div id="enemy-cards" style="display: none;">
-                <div class="enemy-card card-left">
-                    <div class="enemy-block" style="display: none;">❌</div>
+                <div id="enemy-card-left" class="enemy-card card-left">
+                    <div id="enemy-block1" class="enemy-block" style="display: none;">❌</div>
                     <div id ="enemy-shield1" class="enemy-shield" style="display: none;">🛡️<span id="enemy-shield-point1">0</span>🛡️</div>
                     <p class="enemy-card-left-number my-number"></p>
-                    <div class="enemy-charge" style="display: none;">🔋?🔋</div>   
+                    <div id="enemy-charge1" class="enemy-charge" style="display: none;">🔋?🔋</div>   
                 </div>
-                <div class="enemy-card">
-                    <div class="enemy-block" style="display: none;">❌</div>
+                <div id="enemy-card-center" class="enemy-card card-center">
+                    <div id="enemy-block2" class="enemy-block" style="display: none;">❌</div>
                     <div id="enemy-shield2" class="enemy-shield" style="display: none;">🛡️<span id="enemy-shield-point2">0</span>🛡️</div>
                     <p class="enemy-card-center-number my-number"></p>
-                    <div class="enemy-charge" style="display: none;">🔋?🔋</div>   
+                    <div id="enemy-charge2" class="enemy-charge" style="display: none;">🔋?🔋</div>   
                 </div>
-                <div class="enemy-card card-right">
-                    <div class="enemy-block" style="display: none;">❌</div>
+                <div id="enemy-card-right" class="enemy-card card-right">
+                    <div id="enemy-block3" class="enemy-block" style="display: none;">❌</div>
                     <div id="enemy-shield3" class="enemy-shield" style="display: none;">🛡️<span id="enmey-shild-point3">0</span>🛡️</div>
                     <p class="enemy-card-right-number my-number"></p>
-                    <div class="enemy-charge" style="display: none;">🔋?🔋</div>   
+                    <div id="enemy-charge3" class="enemy-charge" style="display: none;">🔋?🔋</div>   
                 </div>
             </div>
             <div id="yamahuda-sutehuda">
@@ -51,16 +53,19 @@
             </div>
             <div id="my-cards" style="display: none;">
                 <div class="my-card card-left">
+                    <div id="my-block1" class="my-block" style="display: none;">❌</div>
                     <div id="my-shield1" class="my-shield" style="display: none;">🛡️<span id="my-shield-point1"></span>🛡️</div>
                     <p id="my-card-left-number" class="my-number"></p>   
-                    <div id="my-charge1" class="my-charge" style="display: flex;">🔋<span id="my-charge-point1">5</span>🔋</div>                 
+                    <div id="my-charge1" class="my-charge" style="display: none;">🔋<span id="my-charge-point1">0</span>🔋</div>                 
                 </div>
-                <div class="my-card">
+                <div class="my-card card-center">
+                    <div id="my-block2" class="my-block" style="display: none;">❌</div>
                     <div id="my-shield2" class="my-shield" style="display: none;">🛡️<span id="my-shield-point2"></span>🛡️</div>
                     <p id="my-card-center-number" class="my-number"></p>
-                    <div id="my-charge2" class="my-charge" style="display: flex;">🔋<span id="my-charge-point2">4</span>🔋</div>
+                    <div id="my-charge2" class="my-charge" style="display: none;">🔋<span id="my-charge-point2">0</span>🔋</div>
                 </div>
                 <div class="my-card card-right">
+                    <div id="my-block3" class="my-block" style="display: none;">❌</div>
                     <div id="my-shield3" class="my-shield" style="display: none;">🛡️<span id="my-shield-point3"></span>🛡️</div>
                     <p id="my-card-right-number" class="my-number"></p>
                     <div id="my-charge3" class="my-charge" style="display: none;">🔋<span id="my-charge-point3">0</span>🔋</div>

@@ -2,8 +2,7 @@ const supabase = window.supabase.createClient("https://ngvdppfzcgbkdtjlwbvh.supa
 
 async function registerUser() {
     const name = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-    localStorage.setItem("username", name)
+    const passwordd = document.getElementById("password").value.trim();
     if (!name || !password) {
         alert("ユーザー名とパスワードを入力してください。");
         return;
@@ -13,7 +12,8 @@ async function registerUser() {
     const { data, error } = await supabase
         .from("users")
         .select("*")
-        .eq("name", name);
+        .eq("name", name)
+        .single();
 
     if (error) {
         console.error("検索エラー:", error);
@@ -22,27 +22,35 @@ async function registerUser() {
     }
 
     if (data !== null) {
-        alert("ログインに成功しました！");
-        window.location.href = "battle.html";
-        return;
+        if(data.password === passwordd){
+            alert("ログインに成功しました！");
+            localStorage.setItem("username", name);
+            window.location.href = "search.html";
+            return;
+        }else{
+            alert("パスワードが違います");
+            return;
+        }
     }
-
-    if(password.length < 6){
+    if(name.length < 4){
+        alert("ユーザー名は4文字以上にしてください");
+        return
+    }
+    if(passwordd.length < 6){
         alert("パスワードは６桁以上にしてください");
         return
     }
-
     // 登録処理
     const { error: insertError } = await supabase
         .from("users")
-        .insert([{ name, password }]);
+        .insert([{ name, passwordd }]);
 
     if (insertError) {
         console.error("登録エラー:", insertError);
         alert("登録に失敗しました。");
     } else {
         alert("ユーザー登録が完了しました！");
-        window.location.href = "battle.html";
+        window.location.href = "search.html";
     }
 }
 

@@ -356,7 +356,7 @@ p, span{
   background-color: rgba(0, 0, 0, 0.5); /* 黒 + 半透明 */
 }
 
-.enemy-block{
+.enemy-block, .my-block{
     position: absolute;
     top: 50%;
     left: 50%;

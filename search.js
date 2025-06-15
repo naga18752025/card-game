@@ -1,16 +1,36 @@
 const supabase = window.supabase.createClient("https://ngvdppfzcgbkdtjlwbvh.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ndmRwcGZ6Y2dia2R0amx3YnZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwODU5NjMsImV4cCI6MjA2MzY2MTk2M30.6bVDy_sbtV4k_AvGeQ_aTtRhz4tBsJb2o_q8Y-OmwMA");
 
-async function wait(){
+let realtimeChannel = null;
+const isFirst = Math.random() < 0.5;
+
+let logoutOK =true;
+let tsunoru = true;
+
+function wait(){
+    if(tsunoru){
+        wait2();
+        tsunoru = false;
+    };
+}
+
+async function wait2(){
     const name = localStorage.getItem("username");
     const { error: Error } = await supabase
         .from("waiters")
-        .insert([{ player: name }]);
+        .insert([
+            { 
+                player: name,
+                turn: !isFirst
+            }
+
+        ]);
 
     if (Error) {
         console.error("エラー:", Error);
         alert("通信に失敗しました。");
         return;
     }
+
     document.getElementById("wait").style.display = "none";
     document.getElementById("join").style.display = "none";
     document.getElementById("topback").style.display = "none"
@@ -18,29 +38,33 @@ async function wait(){
     document.getElementById("back").style.display = "block";
     document.getElementById("roomName").textContent = name +"'s room";
 
-    // リアルタイムチャネルを購読
-    const channel = supabase
-        .channel('my_channel') // 任意のチャネル名
+    realtimeChannel = supabase
+        .channel("my_channel")
         .on(
-        'postgres_changes',
-        { 
-            event: 'UPDATE', // 更新イベントを監視
-            schema: 'public', // スキーマ名 (通常は 'public')
-            table: "waiters", 
-            filter: `player=eq.${name}` // 特定のIDを持つレコードにフィルター
-        },
-        (payload) => {
-            if (payload.old && payload.new && payload.old["enemy"] !== payload.new["enemy"]) {
-                const oldValue = payload.old["enemy"];
-                const newValue = payload.new["enemy"];
-
-                // ここでalertを表示
-                alert(`${payload.new["enemy"]}が対戦相手として見つかりました！`);
-                supabase.unsubscribe();
+            "postgres_changes",
+            {
+                event: "UPDATE",
+                schema: "public",
+                table: "waiters",
+                filter: `player=eq.${name}`,
+            },
+            (payload) => {
+                console.log("payload受信", payload);
+                if (payload.old && payload.new && payload.old["enemy"] !== payload.new["enemy"]) {
+                    localStorage.setItem("enemyname", payload.new["enemy"]);
+                    localStorage.setItem("turn", isFirst);
+                    localStorage.setItem("reload", "none");
+                    alert(`${payload.new["enemy"]}が対戦相手として見つかりました！`);
+                    back();
+                    setTimeout(() => {
+                        window.location.href = "battle.html";
+                    }, 1000);
+                }
             }
-        }
-    )
-    .subscribe();
+        )
+        .subscribe((status) => {
+            console.log("サブスクリプションステータス:", status);
+        });
 }
 
 async function join(){
@@ -51,8 +75,7 @@ async function join(){
     document.getElementById("back2").style.display = "block";
     const { data, error } = await supabase
     .from("waiters")
-    .select("player");
-    const players = data.map(waiter => waiter.player);
+    .select("player, turn");
     // テーブル要素を作成
     const table = document.createElement("table");
 
@@ -61,6 +84,8 @@ async function join(){
     const headerCell = document.createElement("th");
     headerCell.textContent = "対戦待ちユーザー";
     header.appendChild(headerCell);
+
+let hakken = true;
 
     // 各ユーザー名を行として追加
     data.forEach((waiter) => {
@@ -73,7 +98,16 @@ async function join(){
     newElement.classList = "taisen";
     const id_ = newElement.id
     newElement.addEventListener("click", () => {
-        enemyLock(newElement.id);
+        if(hakken){
+            localStorage.setItem("turn", waiter.turn);
+            enemyLock(newElement.id);
+            hakken = false;
+            localStorage.setItem("reload", "none");
+            setTimeout(() => {
+                window.location.href = "battle.html";
+            }, 1000);            
+        }
+
     });
     cell.appendChild(newElement)
     });
@@ -84,33 +118,44 @@ async function join(){
     container.appendChild(table);
 }
 
+modoru = true;
+
+function back0(){
+    if(modoru){
+        back();
+        modoru = false;
+    }
+}
+
 async function back(){
-    document.getElementById("wait").style.display = "block";
-    document.getElementById("join").style.display = "block";
-    document.getElementById("topback").style.display = "block";
-    document.getElementById("waitRoom").style.display = "none";
-    document.getElementById("joinRoom").style.display = "none";
-    document.getElementById("back").style.display = "none";
     const name = localStorage.getItem("username");
     const { error } = await supabase
         .from('waiters')
         .delete()
         .eq('player', name);
-    supabase.unsubscribe();
+    if (realtimeChannel) {
+        await supabase.removeChannel(realtimeChannel);
+        realtimeChannel = null;
+    }
+    setTimeout(() => {
+        modoru = true;
+    }, 500)
 }
 
 function back2(){
+    tsunoru = true;
     document.getElementById("wait").style.display = "block";
     document.getElementById("join").style.display = "block";
     document.getElementById("topback").style.display = "block"
     document.getElementById("waitRoom").style.display = "none";
     document.getElementById("joinRoom").style.display = "none";
+    document.getElementById("back").style.display = "none";
     document.getElementById("back2").style.display = "none";
 }
 
 async function enemyLock(id_){
     const name = localStorage.getItem("username");
-    localStorage.setItem("enemyname", id_)
+    localStorage.setItem("enemyname", id_);
     const aite = id_;
     const { error: Error } = await supabase
         .from("waiters")
@@ -137,3 +182,4 @@ function nameExistCheck(){
 }
 
 nameExistCheck()
+

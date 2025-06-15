@@ -11,8 +11,14 @@ function nameExistCheck(){
     if(Name !== null){
       document.getElementById("loginName").textContent = `${Name}としてログイン中`;
     }else{
-      document.getElementById("loginName").textContent = `未ログイン`;      
+      document.getElementById("loginName").textContent = `未ログイン`; 
+      document.getElementById("logout").style.display = "none";
     }
 }
+
+document.getElementById("logout").addEventListener("click", function(){
+  localStorage.removeItem("username");
+  location.reload();
+})
 
 nameExistCheck()
