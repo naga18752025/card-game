@@ -12,8 +12,7 @@ async function registerUser() {
     const { data, error } = await supabase
         .from("users")
         .select("*")
-        .eq("name", name)
-        .single();
+        .eq("name", name);
 
     if (error) {
         console.error("検索エラー:", error);
@@ -21,8 +20,8 @@ async function registerUser() {
         return;
     }
 
-    if (data !== null) {
-        if(data.password === passwordd){
+    if (data.length !== 0) {
+        if(data[0].password === passwordd){
             alert("ログインに成功しました！");
             localStorage.setItem("username", name);
             window.location.href = "search.html";
@@ -43,13 +42,17 @@ async function registerUser() {
     // 登録処理
     const { error: insertError } = await supabase
         .from("users")
-        .insert([{ name, passwordd }]);
+        .insert([{ 
+            "name": name, 
+            "password": passwordd
+        }]);
 
     if (insertError) {
         console.error("登録エラー:", insertError);
         alert("登録に失敗しました。");
     } else {
         alert("ユーザー登録が完了しました！");
+        localStorage.setItem("username", name);
         window.location.href = "search.html";
     }
 }
