@@ -11,7 +11,7 @@ function nameExistCheck(){
     };
 }
 nameExistCheck();
-alert(JSON.parse(localStorage.getItem("deck")))
+
 // 対戦相手チェック
 function enemyExistCheck(){
     const Enemy = localStorage.getItem("enemyname");
