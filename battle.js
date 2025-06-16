@@ -11,7 +11,7 @@ function nameExistCheck(){
     };
 }
 nameExistCheck();
-
+alert(JSON.parse(localStorage.getItem("deck")))
 // 対戦相手チェック
 function enemyExistCheck(){
     const Enemy = localStorage.getItem("enemyname");
@@ -25,13 +25,7 @@ enemyExistCheck();
 
 // リロードチェック
 function reloadCheck(){
-    if(localStorage.getItem("reload") === "none"){
-        localStorage.setItem("reload, "done");
-    }else{
-        window.location.href = "search.html";
-    }
 }
-reloadCheck();
 
 // 名前登録
 const myName = localStorage.getItem("username");
@@ -85,6 +79,7 @@ function createDeck() {
         };
     };
     // JOKERを1枚（必要に応じて増やせる）
+    deck.push("JOKER");
     deck.push("JOKER");
     // シャッフル（Fisher-Yatesアルゴリズム）
     for (let i = deck.length - 1; i > 0; i--) {
@@ -403,7 +398,8 @@ function conditionReset(){
     document.getElementById("main").style.backgroundColor = "#fff";
     if(document.querySelector(".selected")){
         document.querySelector(".selected").classList.remove("selected");  
-    };      
+    }
+    console.log("リセット");
 }
 // 自分の手札監視
 document.querySelectorAll(".my-hand").forEach(hand => {
@@ -418,7 +414,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
             });
             document.body.classList.remove("overlay");
             document.getElementById("main").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-            chargeSelect = false;              
+            chargeSelect = false; 
         }else if(!chargeSelect && (hand.querySelector(".my-hand-number").textContent.replace(/\s/g, "") !== "JOKER")){ // チャージ用カード選択後
             document.querySelector(".selected").classList.remove("selected");
             hand.querySelector("p").classList.add("selected");
@@ -428,7 +424,9 @@ document.querySelectorAll(".my-hand").forEach(hand => {
                 hand.classList.remove("active");    
             });
             document.querySelectorAll(".my-card").forEach(card => {
-                card.classList.add("active");    
+                if(card.querySelector(".my-shield").style.display === "none"){
+                    card.classList.add("active");    
+                }
             });
             document.body.classList.remove("overlay");
             document.getElementById("main").style.backgroundColor = "rgba(0, 0, 0, 0.5)";            
@@ -466,16 +464,29 @@ document.querySelectorAll(".my-hand").forEach(hand => {
             hand.querySelector("p").classList.add("selected");              
         }else if(!cardEmpty || !taosareta){
             const newCard = hand.querySelector(".my-number").textContent;
+            console.log("newCard:",newCard);
             document.querySelectorAll(".my-card").forEach(card => {
                 if(card.style.backgroundColor === "white"){
                     card.querySelector(".my-number").textContent = newCard;
                     card.style.backgroundColor = "rgb(206, 195, 229)";
                     if(card.classList.contains("card-left")){
-                        card3Update(parseInt(newCard.match(/\d+/)[0]));
+                        if(newCard !== null){
+                            card3Update(parseInt(newCard.match(/\d+/)[0]));
+                        }else{
+                            card3Update(100);
+                        }
                     }else if(card.classList.contains("card-center")){
-                        card2Update(parseInt(newCard.match(/\d+/)[0]));                        
+                        if(newCard !== null){
+                            card2Update(parseInt(newCard.match(/\d+/)[0]));
+                        }else{
+                            card2Update(100);
+                        }                     
                     }else{
-                        card1Update(parseInt(newCard.match(/\d+/)[0]));                        
+                        if(newCard !== null){
+                            card1Update(parseInt(newCard.match(/\d+/)[0]));
+                        }else{
+                            card1Update(100);
+                        }                     
                     }
                 };
             });
@@ -486,6 +497,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
                 document.getElementById("change").style.backgroundColor = "rgb(0, 34, 255)";  
                 document.getElementById("shield").style.backgroundColor = "rgb(0, 34, 255)";
                 document.getElementById("block").style.backgroundColor = "rgb(0, 34, 255)"; 
+                console.log("防衛系復活");
                 boueijoutai = true;
             };
             if(!taosareta){
@@ -494,12 +506,14 @@ document.querySelectorAll(".my-hand").forEach(hand => {
                 document.getElementById("attack").style.backgroundColor = "rgb(255, 0, 0)";
                 document.getElementById("tokkou").style.backgroundColor = "rgb(255, 0, 0)"; 
                 taosareta = true;
+                console.log("攻撃系復活");
             }else{
                 kougekiTeishi();
             }
             kougekijoutai = true;
 
             conditionReset();
+            console.log("新しいカード設置完了");
         };
     });
 })
@@ -544,6 +558,9 @@ document.querySelectorAll(".my-card").forEach(card => {
             if(card.querySelector(".my-shield").querySelector("span").textContent === ""){
                 card.querySelector(".my-shield").querySelector("span").textContent = String(parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]));
                 card.querySelector(".my-shield").style.display = "flex";
+                document.querySelectorAll(".my-hand").forEach(hand => {
+                    hand.classList.remove("miniNumber");
+                });
                 if(card.querySelector(".my-shield").id === "my-shield1"){
                     guard3Update(parseInt(card.querySelector(".my-shield").querySelector("span").textContent.match(/\d+/)[0]));
                 }else if(card.querySelector(".my-shield").id === "my-shield2"){
@@ -668,55 +685,57 @@ document.querySelectorAll(".enemy-card").forEach(card => {
             if(card.querySelector(".my-number").classList.contains("enemy-card-left-number")){
                 if(enemyCardLeftNumber + enemyShieldLeftNumber <= chargeRyou){
                     alert("attack succeeded");
+                    damagePattern(damageFrom + "_card3_succeeded", chargeRyou);
                     myPoint();
                     document.getElementById("enemy-card-left").style.background = "white";
-                    damagePattern(damageFrom + "_card3_succeeded", chargeRyou);
                 }else if(enemyCardLeftNumber === 100){
                     alert("this is JOKER");
                     shieldDelete(document.querySelector(".selected").parentElement.querySelector(".my-shield"));
+                    chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
                     kougekijoutai = false;
-                    enemyPoint();
+                    damagePattern(damageFrom + "_card3_failed_JOKER", chargeRyou);
+                    enemyPoint(0);
                     kougekiTeishi();
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
                     conditionReset();
                     cardAdd();
-                    damagePattern(damageFrom + "_card3_failed_JOKER", chargeRyou);
                 }else{
 
                     alert("attack failed");
                     damagePattern(damageFrom + "_card3_failed", chargeRyou);
                 };
+                charge3Update(0);
                 document.getElementById("enemy-shield1").style.display = "none";
                 document.getElementById("enemy-shield1").querySelector("span").textContent = "";
                 chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
-                charge3Update(0);
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-center-number")){
                 if(enemyCardCenterNumber + enemyShieldCenterNumber <= chargeRyou){
                     alert("attack succeeded");
+                    damagePattern(damageFrom + "_card2_succeeded", chargeRyou);
                     myPoint();
                     document.getElementById("enemy-card-center").style.background = "white";
-                    damagePattern(damageFrom + "_card2_succeeded", chargeRyou);
                 }else if(enemyCardCenterNumber === 100){
                     alert("this is JOKER");
                     shieldDelete(document.querySelector(".selected").parentElement.querySelector(".my-shield"));
+                    chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
                     kougekijoutai = false;
-                    enemyPoint();
+                    damagePattern(damageFrom + "_card2_failed_JOKER", chargeRyou);
+                    enemyPoint(0);
                     kougekiTeishi();
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
                     conditionReset();
                     cardAdd();
-                    damagePattern(damageFrom + "_card2_failed_JOKER", chargeRyou);
                 }else{
 
                     alert("attack failed");
                     damagePattern(damageFrom + "_card2_failed", chargeRyou);                    
                 };
+                charge2Update(0);
                 document.getElementById("enemy-shield2").style.display = "none";
                 document.getElementById("enemy-shield2").querySelector("span").textContent = "";
                 chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
-                charge2Update(0);
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-right-number")){
                 if(enemyCardRightNumber + enemyShieldRightNumber <= chargeRyou){
                     alert("attack succeeded");
@@ -726,23 +745,24 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 }else if(enemyCardRightNumber === 100){
                     alert("this is JOKER");
                     shieldDelete(document.querySelector(".selected").parentElement.querySelector(".my-shield"));
+                    chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
                     kougekijoutai = false;
-                    enemyPoint();
+                    damagePattern(damageFrom + "_card1_failed_JOKER", chargeRyou);
+                    enemyPoint(0);
                     kougekiTeishi();
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
                     conditionReset();
                     cardAdd(); 
-                    damagePattern(damageFrom + "_card1_failed_JOKER", chargeRyou);
                 }else{
 
                     alert("attack failed");
                     damagePattern(damageFrom + "_card1_failed", chargeRyou);                  
                 };
+                charge1Update(0);
                 document.getElementById("enemy-shield3").style.display = "none";
                 document.getElementById("enemy-shield3").querySelector("span").textContent = "";
                 chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
-                charge1Update(0);
             };
             kougekiTeishi();
             conditionReset();
@@ -751,10 +771,9 @@ document.querySelectorAll(".enemy-card").forEach(card => {
             if(card.querySelector(".my-number").classList.contains("enemy-card-left-number")){
                 if(enemyCardLeftNumber + enemyShieldLeftNumber <= tokkouNumber){
                     alert(enemyCardLeftNumber + enemyShieldLeftNumber);
-                    myPoint();
-                    document.getElementById("enemy-charge3").style.display = "none";
-                    document.getElementById("enemy-charge3").textContent = "0";  
                     damagePattern(damageFrom + "_card3_succeeded", tokkouNumber);
+                    myPoint();
+                    document.getElementById("enemy-charge3").style.display = "none"; 
                 }else if(enemyCardLeftNumber === 100){
                     alert("this is JOKER");
                     damagePattern(damageFrom + "_card3_failed_JOKER", tokkouNumber);
@@ -768,10 +787,9 @@ document.querySelectorAll(".enemy-card").forEach(card => {
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-center-number")){
                 if(enemyCardCenterNumber + enemyShieldCenterNumber <= tokkouNumber){
                     alert("tokkou succeeded");               
-                    myPoint();
-                    document.getElementById("enemy-charge3").style.display = "none";
-                    document.getElementById("enemy-charge3").textContent = "0";  
                     damagePattern(damageFrom + "_card2_succeeded", tokkouNumber);
+                    myPoint();
+                    document.getElementById("enemy-charge3").style.display = "none"; 
                 }else if(enemyCardCenterNumber === 100){
                     alert("this is JOKER");
                     damagePattern(damageFrom + "_card2_failed_JOKER", tokkouNumber);
@@ -785,10 +803,9 @@ document.querySelectorAll(".enemy-card").forEach(card => {
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-right-number")){
                 if(enemyCardRightNumber + enemyShieldRightNumber <= tokkouNumber){
                     alert("tokkou succeeded");
-                    myPoint();
-                    document.getElementById("enemy-charge3").style.display = "none";
-                    document.getElementById("enemy-charge3").textContent = "0";                    
                     damagePattern(damageFrom + "_card1_succeeded", tokkouNumber);
+                    myPoint();
+                    document.getElementById("enemy-charge3").style.display = "none";                   
                 }else if(enemyCardRightNumber === 100){
                     alert("this is JOKER")
                     damagePattern(damageFrom + "_card1_failed_JOKER", tokkouNumber);
@@ -801,7 +818,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 document.getElementById("enemy-card-right").style.background = "white";
             }; 
             kougekijoutai = false;
-            enemyPoint();
+            enemyPoint(0);
             kougekiTeishi();
             shieldDelete(document.querySelector(".selected").parentElement.querySelector(".my-shield"));
             chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
@@ -849,19 +866,30 @@ async function cardAdd(){
             document.getElementById("block").style.backgroundColor = "rgba(0, 0, 0, 0.5)"; 
         };
     });
+    console.log("カード追加");
 }
 
+let owari = true;
 // 自分の点数確認
 function myPoint(){
     myPointUpdate(parseInt(document.getElementById("my-point").textContent) + 1);
     document.getElementById("my-point").textContent = String(parseInt(document.getElementById("my-point").textContent) + 1);
     if(parseInt(document.getElementById("my-point").textContent) >= 3){
-        alert("あなたの勝ちです");
-    }    
+        youWin();
+    }
+    console.log("自分の点数確認");
 }
 // 相手の点数確認
-function enemyPoint(){
-    document.getElementById("enemy-point").textContent = String(parseInt(document.getElementById("enemy-point").textContent) + 1)
+function enemyPoint(data){
+    if(data === 0){
+        document.getElementById("enemy-point").textContent = String(parseInt(document.getElementById("enemy-point").textContent) + 1)        
+    }else{
+        document.getElementById("enemy-point").textContent = data;
+    }
+    if(parseInt(document.getElementById("enemy-point").textContent) >= 3){
+        youLost();
+    }
+    console.log("相手の点数確認");
 }
 
 // 攻撃停止
@@ -873,9 +901,9 @@ function kougekiTeishi(){
     document.getElementById("attack").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
     document.getElementById("tokkou").style.backgroundColor = "rgba(0, 0, 0, 0.5)";    
     kougeki = false;
-    if(!bouei && kougekijoutai){
+    if(!bouei && kougekijoutai && owari){
         enemyTurn();
-    }
+    };
 }
 
 // 防衛停止
@@ -887,9 +915,9 @@ function boueiTeishi(){
     document.getElementById("shield").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
     document.getElementById("block").style.backgroundColor = "rgba(0, 0, 0, 0.5)";    
     bouei = false;
-    if(!kougeki){
+    if(!kougeki && owari){
         enemyTurn();     
-    }
+    };
 }
 
 // 復活
@@ -903,6 +931,7 @@ function hukkatsu(){
     document.getElementById("block").style.backgroundColor = "rgb(0, 34, 255)"; 
     kougeki = true;
     bouei = true;
+    console.log("復活");
 }
 
 // 自分のターン
@@ -924,7 +953,8 @@ function myTurn(){
     document.getElementById("message").style.display = "block";
     setTimeout(() => {
         document.getElementById("message").style.display = "none";
-    }, 2000);    
+    }, 2000);
+    console.log("自分のターン");
 }
 
 // 相手のターン中
@@ -937,6 +967,7 @@ function enemyTurn(){
     document.getElementById("message").classList.add("enemy-turn");
     document.getElementById("message").style.display = "block";
     machi();
+    console.log("相手のターン中");
 }
 
 // ターン情報更新
@@ -950,7 +981,7 @@ async function turnUpdate(){
     if (fetchError) {
     console.error("取得エラー:", fetchError);
     return;
-    }
+    };
 
     const newValue = !data.turn;
 
@@ -961,7 +992,8 @@ async function turnUpdate(){
 
     if (updateError) {
     console.error("更新エラー:", updateError);
-    } 
+    };
+    console.log("ターン更新");
 }
 
 // 自分のポイント更新
@@ -977,14 +1009,10 @@ async function myPointUpdate(point){
     if (error) {
     console.error("更新エラー:", error);
     }
+    console.log("自分のポイント更新");
 }
 
 // 自分のセットカード更新
-function setCard(card){
-    if(card.querySelector(".my-number").classList.contains("my-card-left-number")){
-        card3Check()
-    }
-}
 async function card1Update(right){
     const { error } = await supabase
     .from("battles")
@@ -997,6 +1025,7 @@ async function card1Update(right){
     if (error) {
     console.error("更新エラー:", error);
     }
+    console.log("セットカード１更新");
 }
 async function card2Update(center){
     const { error } = await supabase
@@ -1010,6 +1039,7 @@ async function card2Update(center){
     if (error) {
     console.error("更新エラー:", error);
     }
+    console.log("セットカード２更新");
 }
 async function card3Update(left){
     const { error } = await supabase
@@ -1023,6 +1053,7 @@ async function card3Update(left){
     if (error) {
     console.error("更新エラー:", error);
     }
+    console.log("セットカード３更新");
 }
 
 // 自分のチャージ更新
@@ -1037,7 +1068,8 @@ async function charge1Update(right){
 
     if (error) {
     console.error("更新エラー:", error);
-    }
+    };
+    console.log("チャージ更新");
 }
 async function charge2Update(center){
     const { error } = await supabase
@@ -1050,7 +1082,8 @@ async function charge2Update(center){
 
     if (error) {
     console.error("更新エラー:", error);
-    }
+    };
+    console.log("チャージ更新");
 }
 async function charge3Update(left){
     const { error } = await supabase
@@ -1063,7 +1096,8 @@ async function charge3Update(left){
 
     if (error) {
     console.error("更新エラー:", error);
-    }
+    };
+    console.log("チャージ更新");
 }
 
 // 自分のシールド更新
@@ -1078,7 +1112,8 @@ async function guard1Update(right){
 
     if (error) {
     console.error("更新エラー:", error);
-    }
+    };
+    console.log("シールド更新");
 }
 async function guard2Update(center){
     const { error } = await supabase
@@ -1091,7 +1126,8 @@ async function guard2Update(center){
 
     if (error) {
     console.error("更新エラー:", error);
-    }
+    };
+    console.log("シールド更新");
 }
 async function guard3Update(left){
     const { error } = await supabase
@@ -1104,7 +1140,8 @@ async function guard3Update(left){
 
     if (error) {
     console.error("更新エラー:", error);
-    }
+    };
+    console.log("シールド更新");
 }
 
 // 相手に対するブロック情報更新
@@ -1119,7 +1156,7 @@ async function blockUpdate(blockNumber){
 
     if (error) {
     console.error("更新エラー:", error);
-    }    
+    };   
 }
 
 // 相手のセットカード確認
@@ -1176,7 +1213,8 @@ async function damagePattern(syurui, okisa){
 
     if (error) {
     console.error("更新エラー:", error);
-    }
+    };
+    console.log("ダメージパターン登録");
 }
 
 // 相手の情報更新
@@ -1196,10 +1234,7 @@ async function enemyUpdate(){
     enemyShieldLeftNumber = data.guard_card1;
     enemyShieldCenterNumber = data.guard_card2;
     enemyShieldRightNumber = data.guard_card3;
-    document.getElementById("enemy-point").textContent = String(data.point);
-    if(data.point >= 3){
-        alert("あなたの負けです");
-    };
+    enemyPoint(String(data.point));
     if(data.guard_card1 > 0){
         document.getElementById("enemy-shield1").querySelector("span").textContent = String(data.guard_card1);
         document.getElementById("enemy-shield1").style.display = "flex";        
@@ -1242,7 +1277,6 @@ async function enemyUpdate(){
     };
     if(data.damage_pattern.includes("attack1")){
         nanikara = "左のセットカードからアタックされ"
-        naniniCheck();
     }else if(data.damage_pattern.includes("attack2")){
         nanikara = "中央のセットカードからアタックされ";
     }else if(data.damage_pattern.includes("attack3")){
@@ -1276,31 +1310,48 @@ async function enemyUpdate(){
             document.getElementById("my-card-right-number").parentElement.style.backgroundColor = "white";
             cardAdd();
         };
+        console.log("倒されたことを検知");
         alert(nanini + nanikara + String(data.damage) + dounatta);
     }else if(data.damage_pattern.includes("failed")){
         dounatta = "のダメージに耐えました";
         alert(nanini + nanikara + String(data.damage) + dounatta);
+        console.log("耐えたことを検知");
     };
     if(data.damage_pattern.includes("JOKER")){
         myPoint();
         if(nanini.includes("左")){
             document.getElementById("my-card-left-number").textContent = "";
+            document.getElementById("my-card-left-number").parentElement.style.backgroundColor = "white";
+            shieldDelete(document.getElementById("my-card-left").querySelector(".my-shield"));
+            chargeDelete(document.getElementById("my-card-left").querySelector(".my-charge"));
             cardAdd();
         }else if(nanini.includes("中央")){
-            document.getElementById("my-card-center-number").textContent = "";    
+            document.getElementById("my-card-center-number").textContent = "";   
+            document.getElementById("my-card-center-number").parentElement.style.backgroundColor = "white"; 
+            shieldDelete(document.getElementById("my-card-center").querySelector(".my-shield"));
+            chargeDelete(document.getElementById("my-card-center").querySelector(".my-charge"));
             cardAdd();
         }else if(nanini.includes("右")){
             document.getElementById("my-card-right-number").textContent = "";
+            document.getElementById("my-card-right-number").parentElement.style.backgroundColor = "white";
+            shieldDelete(document.getElementById("my-card-right").querySelector(".my-shield"));
+            chargeDelete(document.getElementById("my-card-right").querySelector(".my-charge"));
             cardAdd();
         };
         alert("JOKERに対する接触だったため一点入ります")
-    }
+    };
+    console.log("敵の状態チェック終了");
 }
 
 
 // ターン待ち
 let realtimeChannel = null;
-async function machi(){
+
+async function machi() {
+    if (realtimeChannel) {
+        await supabase.removeChannel(realtimeChannel);
+    }
+
     realtimeChannel = supabase
         .channel("my_channel")
         .on(
@@ -1312,24 +1363,56 @@ async function machi(){
                 filter: `name=eq.${myName}`,
             },
             (payload) => {
-                console.log("🔥 変更検知payload:", payload);
-                if (payload.old && payload.new) {
-                    console.log("旧:", payload.old.turn, "新:", payload.new.turn);
-                    if (payload.old["turn"] !== payload.new["turn"]) {
-                        console.log("▶ turnが変化したのでhukkatsu呼び出し");
-                        hukkatsu();
-                        teishi();
-                    }
+                console.log("🔥 変更検知:", payload);
+                if (payload.old && payload.new && payload.old.turn !== payload.new.turn) {
+                    console.log("▶ turnが変化したので hukkatsu 呼び出し");
+                    hukkatsu();
+                    teishi();
                 }
             }
         )
+        .on("error", (error) => {
+            console.warn("📛 CHANNEL_ERROR:", error);
+            retrySubscribe(); // ← CHANNEL_ERRORにも再接続
+        })
+        .on("timeout", () => {
+            console.warn("⏳ TIMED_OUT: サーバー応答なし");
+            retrySubscribe(); // ← TIMED_OUTにも再接続
+        })
         .subscribe((status) => {
-            console.log("サブスクリプションステータス:", status);
+            console.log("🔄 サブスクリプションステータス:", status);
         });
 }
-async function teishi(){
+
+async function retrySubscribe() {
+    console.log("🔁 再接続を試みます...");
+    await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒待ってから再接続
+    await subscribeToChannel();
+}
+
+async function teishi() {
     if (realtimeChannel) {
         await supabase.removeChannel(realtimeChannel);
         realtimeChannel = null;
-    }    
+    }
+}
+
+function youWin(){
+    owari = false;
+    document.getElementById("message").classList.remove("enemy-turn");
+    document.getElementById("message").textContent = "YOU WIN";
+    document.getElementById("message").style.display = "block";
+    kougekiTeishi();
+    boueiTeishi();
+    turnUpdate();
+}
+
+function youLost(){
+    owari = false;
+    document.getElementById("message").classList.remove("enemy-turn");
+    document.getElementById("message").textContent = "YOU LOST";
+    document.getElementById("message").style.display = "block";
+    kougekiTeishi();
+    boueiTeishi();
+    turnUpdate();
 }

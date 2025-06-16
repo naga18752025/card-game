@@ -6,6 +6,28 @@ const isFirst = Math.random() < 0.5;
 let logoutOK =true;
 let tsunoru = true;
 
+// 山札作成
+function createDeck() {
+    const suits = ['♠', '♥', '♦', '♣'];  // 絵柄（省略してもOK）
+    const deck = [];
+    // 1〜13を4スート分入れる（1=A, 11=J, 12=Q, 13=K）
+    for (let suit of suits) {
+        for (let i = 1; i <= 13; i++) {
+            deck.push(`${suit}${i}`);
+        };
+    };
+    // JOKERを1枚（必要に応じて増やせる）
+    deck.push("JOKER");
+    deck.push("JOKER");
+    // シャッフル（Fisher-Yatesアルゴリズム）
+    for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+    };
+    return deck;
+}
+const newdeck = createDeck();
+
 function wait(){
     if(tsunoru){
         wait2();
@@ -14,13 +36,15 @@ function wait(){
 }
 
 async function wait2(){
+    localStorage.setItem("deck", JSON.stringify(newdeck));
     const name = localStorage.getItem("username");
     const { error: Error } = await supabase
         .from("waiters")
         .insert([
             { 
-                player: name,
-                turn: !isFirst
+                "player": name,
+                "turn": !isFirst,
+                "shared_deck": newdeck
             }
 
         ]);
@@ -75,7 +99,7 @@ async function join(){
     document.getElementById("back2").style.display = "block";
     const { data, error } = await supabase
     .from("waiters")
-    .select("player, turn");
+    .select("player, turn, shared_deck");
     // テーブル要素を作成
     const table = document.createElement("table");
 
@@ -99,6 +123,7 @@ let hakken = true;
     const id_ = newElement.id
     newElement.addEventListener("click", () => {
         if(hakken){
+            localStorage.setItem("deck", JSON.stringify(waiter.shared_deck));
             localStorage.setItem("turn", waiter.turn);
             enemyLock(newElement.id);
             hakken = false;
