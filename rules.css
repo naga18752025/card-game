@@ -61,6 +61,8 @@ html, body {
 #main{
     margin-top: 5vh;
     margin-bottom: 2vh;
+    margin-left: 2vw;
+    margin-right: 2vw;
     background-color: rgb(255, 255, 255);
     padding:20px 5% 20px 5%;
     border-radius: 10px;
