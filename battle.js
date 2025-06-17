@@ -472,19 +472,19 @@ document.querySelectorAll(".my-hand").forEach(hand => {
                     card.querySelector(".my-number").textContent = newCard;
                     card.style.backgroundColor = "rgb(206, 195, 229)";
                     if(card.classList.contains("card-left")){
-                        if(newCard !== null){
+                        if(parseInt(newCard.match(/\d+/)[0]) !== null){
                             card3Update(parseInt(newCard.match(/\d+/)[0]));
                         }else{
                             card3Update(100);
                         }
                     }else if(card.classList.contains("card-center")){
-                        if(newCard !== null){
+                        if(parseInt(newCard.match(/\d+/)[0]) !== null){
                             card2Update(parseInt(newCard.match(/\d+/)[0]));
                         }else{
                             card2Update(100);
                         }                     
                     }else{
-                        if(newCard !== null){
+                        if(parseInt(newCard.match(/\d+/)[0]) !== null){
                             card1Update(parseInt(newCard.match(/\d+/)[0]));
                         }else{
                             card1Update(100);
