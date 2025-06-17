@@ -400,6 +400,7 @@ function conditionReset(){
         document.querySelector(".selected").classList.remove("selected");  
     }
     console.log("リセット");
+    console.trace();
 }
 // 自分の手札監視
 document.querySelectorAll(".my-hand").forEach(hand => {
@@ -465,6 +466,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
         }else if(!cardEmpty || !taosareta){
             const newCard = hand.querySelector(".my-number").textContent;
             console.log("newCard:",newCard);
+            console.trace();
             document.querySelectorAll(".my-card").forEach(card => {
                 if(card.style.backgroundColor === "white"){
                     card.querySelector(".my-number").textContent = newCard;
@@ -498,6 +500,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
                 document.getElementById("shield").style.backgroundColor = "rgb(0, 34, 255)";
                 document.getElementById("block").style.backgroundColor = "rgb(0, 34, 255)"; 
                 console.log("防衛系復活");
+                console.trace();
                 boueijoutai = true;
             };
             if(!taosareta){
@@ -507,6 +510,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
                 document.getElementById("tokkou").style.backgroundColor = "rgb(255, 0, 0)"; 
                 taosareta = true;
                 console.log("攻撃系復活");
+                console.trace();
             }else{
                 kougekiTeishi();
             }
@@ -514,6 +518,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
 
             conditionReset();
             console.log("新しいカード設置完了");
+            console.trace();
         };
     });
 })
@@ -680,6 +685,9 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 conditionReset();
                 boueiTeishi();
             };
+            document.querySelectorAll(".my-hand").forEach(hand => {
+                hand.classList.remove("miniNumber");
+            });
         }else if(!attackSelect){ // アタック用カード選択後
             const chargeRyou = parseInt(document.querySelector(".selected").parentElement.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0]);
             if(card.querySelector(".my-number").classList.contains("enemy-card-left-number")){
@@ -708,7 +716,9 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 charge3Update(0);
                 document.getElementById("enemy-shield1").style.display = "none";
                 document.getElementById("enemy-shield1").querySelector("span").textContent = "";
-                chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
+                if(enemyCardLeftNumber !== 100){
+                    chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
+                };
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-center-number")){
                 if(enemyCardCenterNumber + enemyShieldCenterNumber <= chargeRyou){
                     alert("attack succeeded");
@@ -735,7 +745,9 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 charge2Update(0);
                 document.getElementById("enemy-shield2").style.display = "none";
                 document.getElementById("enemy-shield2").querySelector("span").textContent = "";
-                chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
+                if(enemyCardCenterNumber !== 100){
+                    chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
+                };
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-right-number")){
                 if(enemyCardRightNumber + enemyShieldRightNumber <= chargeRyou){
                     alert("attack succeeded");
@@ -762,10 +774,12 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 charge1Update(0);
                 document.getElementById("enemy-shield3").style.display = "none";
                 document.getElementById("enemy-shield3").querySelector("span").textContent = "";
-                chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
+                if(enemyCardRightNumber !== 100){
+                    chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
+                    conditionReset();
+                };
             };
             kougekiTeishi();
-            conditionReset();
         }else if(!tokkouSelect){ // トッコウ用カード選択後
             const tokkouNumber = parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]);
             if(card.querySelector(".my-number").classList.contains("enemy-card-left-number")){
@@ -833,13 +847,17 @@ document.querySelectorAll(".enemy-card").forEach(card => {
 // シールド削除
 function shieldDelete(dore){
     dore.style.display = "none";
-    dore.querySelector("span").textContent = "";    
+    dore.querySelector("span").textContent = "";
+    console.log("シールド削除", dore);
+    console.trace();
 }
 
 // チャージ削除
 function chargeDelete(dore){
     dore.querySelector("span").textContent = "0";
     dore.style.display = "none";
+    console.log("チャージ削除", dore);
+    console.trace();
 }
 
 // カード追加
@@ -867,6 +885,7 @@ async function cardAdd(){
         };
     });
     console.log("カード追加");
+    console.trace();
 }
 
 let owari = true;
@@ -878,6 +897,7 @@ function myPoint(){
         youWin();
     }
     console.log("自分の点数確認");
+    console.trace();
 }
 // 相手の点数確認
 function enemyPoint(data){
@@ -890,6 +910,7 @@ function enemyPoint(data){
         youLost();
     }
     console.log("相手の点数確認");
+    console.trace();
 }
 
 // 攻撃停止
@@ -943,18 +964,13 @@ function myTurn(){
         blockjoutai = true;
         blockUpdate(0);
     }
+    console.log("自分のターン");
+    console.trace();
     document.getElementById("enemy-card-left").style.background = "linear-gradient(145deg, rgb(180, 161, 222), rgb(123, 54, 183)";
     document.getElementById("enemy-card-center").style.background = "linear-gradient(145deg, rgb(180, 161, 222), rgb(123, 54, 183)";
     document.getElementById("enemy-card-right").style.background = "linear-gradient(145deg, rgb(180, 161, 222), rgb(123, 54, 183)";
     enemyUpdate();
     damagePattern("", 0);
-    document.getElementById("message").classList.remove("enemy-turn");
-    document.getElementById("message").textContent = "自分のターン";
-    document.getElementById("message").style.display = "block";
-    setTimeout(() => {
-        document.getElementById("message").style.display = "none";
-    }, 2000);
-    console.log("自分のターン");
 }
 
 // 相手のターン中
@@ -968,10 +984,16 @@ function enemyTurn(){
     document.getElementById("message").style.display = "block";
     machi();
     console.log("相手のターン中");
+    console.trace();
 }
 
 // ターン情報更新
-async function turnUpdate(){
+function turnUpdate(){
+    setTimeout(() => {
+        turnUpdate2();
+    }, 1500);
+}
+async function turnUpdate2(){
     const { data, error: fetchError } = await supabase
     .from("battles")
     .select("turn")
@@ -994,6 +1016,7 @@ async function turnUpdate(){
     console.error("更新エラー:", updateError);
     };
     console.log("ターン更新");
+    console.trace();
 }
 
 // 自分のポイント更新
@@ -1010,6 +1033,7 @@ async function myPointUpdate(point){
     console.error("更新エラー:", error);
     }
     console.log("自分のポイント更新");
+    console.trace();
 }
 
 // 自分のセットカード更新
@@ -1026,6 +1050,7 @@ async function card1Update(right){
     console.error("更新エラー:", error);
     }
     console.log("セットカード１更新");
+    console.trace();
 }
 async function card2Update(center){
     const { error } = await supabase
@@ -1040,6 +1065,7 @@ async function card2Update(center){
     console.error("更新エラー:", error);
     }
     console.log("セットカード２更新");
+    console.trace();
 }
 async function card3Update(left){
     const { error } = await supabase
@@ -1054,6 +1080,7 @@ async function card3Update(left){
     console.error("更新エラー:", error);
     }
     console.log("セットカード３更新");
+    console.trace();
 }
 
 // 自分のチャージ更新
@@ -1069,7 +1096,8 @@ async function charge1Update(right){
     if (error) {
     console.error("更新エラー:", error);
     };
-    console.log("チャージ更新");
+    console.log("チャージ1更新");
+    console.trace();
 }
 async function charge2Update(center){
     const { error } = await supabase
@@ -1083,7 +1111,8 @@ async function charge2Update(center){
     if (error) {
     console.error("更新エラー:", error);
     };
-    console.log("チャージ更新");
+    console.log("チャージ2更新");
+    console.trace();
 }
 async function charge3Update(left){
     const { error } = await supabase
@@ -1097,7 +1126,8 @@ async function charge3Update(left){
     if (error) {
     console.error("更新エラー:", error);
     };
-    console.log("チャージ更新");
+    console.log("チャージ3更新");
+    console.trace();
 }
 
 // 自分のシールド更新
@@ -1113,7 +1143,8 @@ async function guard1Update(right){
     if (error) {
     console.error("更新エラー:", error);
     };
-    console.log("シールド更新");
+    console.log("シールド1更新");
+    console.trace();
 }
 async function guard2Update(center){
     const { error } = await supabase
@@ -1127,7 +1158,8 @@ async function guard2Update(center){
     if (error) {
     console.error("更新エラー:", error);
     };
-    console.log("シールド更新");
+    console.log("シールド2更新");
+    console.trace();
 }
 async function guard3Update(left){
     const { error } = await supabase
@@ -1141,7 +1173,8 @@ async function guard3Update(left){
     if (error) {
     console.error("更新エラー:", error);
     };
-    console.log("シールド更新");
+    console.log("シールド3更新");
+    console.trace();
 }
 
 // 相手に対するブロック情報更新
@@ -1215,6 +1248,7 @@ async function damagePattern(syurui, okisa){
     console.error("更新エラー:", error);
     };
     console.log("ダメージパターン登録");
+    console.trace();
 }
 
 // 相手の情報更新
@@ -1235,6 +1269,14 @@ async function enemyUpdate(){
     enemyShieldCenterNumber = data.guard_card2;
     enemyShieldRightNumber = data.guard_card3;
     enemyPoint(String(data.point));
+    if(String(data.point) !== "3"){
+        document.getElementById("message").classList.remove("enemy-turn");
+        document.getElementById("message").textContent = "自分のターン";
+        document.getElementById("message").style.display = "block";
+        setTimeout(() => {
+            document.getElementById("message").style.display = "none";
+        }, 2000);
+    }
     if(data.guard_card1 > 0){
         document.getElementById("enemy-shield1").querySelector("span").textContent = String(data.guard_card1);
         document.getElementById("enemy-shield1").style.display = "flex";        
@@ -1300,20 +1342,33 @@ async function enemyUpdate(){
         if(nanini.includes("左")){
             document.getElementById("my-card-left-number").textContent = "";
             document.getElementById("my-card-left-number").parentElement.style.backgroundColor = "white";
+            shieldDelete(document.getElementById("my-card-left").querySelector(".my-shield"));
+            chargeDelete(document.getElementById("my-card-left").querySelector(".my-charge"));
             cardAdd();
         }else if(nanini.includes("中央")){
             document.getElementById("my-card-center-number").textContent = "";
             document.getElementById("my-card-center-number").parentElement.style.backgroundColor = "white";
+            shieldDelete(document.getElementById("my-card-center").querySelector(".my-shield"));
+            chargeDelete(document.getElementById("my-card-center").querySelector(".my-charge"));
             cardAdd();
         }else if(nanini.includes("右")){
             document.getElementById("my-card-right-number").textContent = "";
             document.getElementById("my-card-right-number").parentElement.style.backgroundColor = "white";
+            shieldDelete(document.getElementById("my-card-right").querySelector(".my-shield"));
+            chargeDelete(document.getElementById("my-card-right").querySelector(".my-charge"));
             cardAdd();
         };
         console.log("倒されたことを検知");
         alert(nanini + nanikara + String(data.damage) + dounatta);
     }else if(data.damage_pattern.includes("failed")){
         dounatta = "のダメージに耐えました";
+        if(nanini.includes("左")){
+            shieldDelete(document.getElementById("my-card-left").querySelector(".my-shield"));
+        }else if(nanini.includes("中央")){
+            shieldDelete(document.getElementById("my-card-center").querySelector(".my-shield"));
+        }else if(nanini.includes("右")){
+            shieldDelete(document.getElementById("my-card-right").querySelector(".my-shield"));
+        };
         alert(nanini + nanikara + String(data.damage) + dounatta);
         console.log("耐えたことを検知");
     };
@@ -1405,6 +1460,7 @@ function youWin(){
     kougekiTeishi();
     boueiTeishi();
     turnUpdate();
+    document.getElementById("modoru").style.display = "block";
 }
 
 function youLost(){
@@ -1415,4 +1471,9 @@ function youLost(){
     kougekiTeishi();
     boueiTeishi();
     turnUpdate();
+    document.getElementById("modoru").style.display = "block";
+}
+
+function back(){
+    window.location.href="index.html";
 }
