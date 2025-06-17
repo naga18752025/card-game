@@ -59,10 +59,10 @@ html, body {
 }
 
 #main{
-    margin-top: 20vh;
-    margin-bottom: 20vh;
+    margin-top: 5vh;
+    margin-bottom: 2vh;
     background-color: rgb(255, 255, 255);
-    padding:20px 25% 20px 25%;
+    padding:20px 5% 20px 5%;
     border-radius: 10px;
     border: 2px solid rgb(0, 0, 0);
 }
