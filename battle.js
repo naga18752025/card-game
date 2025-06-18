@@ -851,18 +851,18 @@ document.querySelectorAll(".enemy-card").forEach(card => {
 
 // シールド削除
 function shieldDelete(dore){
-    dore.style.display = "none";
-    dore.querySelector("span").textContent = "";
     console.log("シールド削除", dore);
     console.trace();
+    dore.style.display = "none";
+    dore.querySelector("span").textContent = "";
 }
 
 // チャージ削除
 function chargeDelete(dore){
-    dore.querySelector("span").textContent = "0";
-    dore.style.display = "none";
     console.log("チャージ削除", dore);
     console.trace();
+    dore.querySelector("span").textContent = "0";
+    dore.style.display = "none";
 }
 
 // カード追加
