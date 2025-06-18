@@ -696,6 +696,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     damagePattern(damageFrom + "_card3_succeeded", chargeRyou);
                     myPoint();
                     document.getElementById("enemy-card-left").style.background = "white";
+                    chargeDelete(document.getElementById("enemy-charge1"));
                 }else if(enemyCardLeftNumber === 100){
                     alert("this is JOKER");
                     shieldDelete(document.querySelector(".selected").parentElement.querySelector(".my-shield"));
@@ -718,6 +719,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 document.getElementById("enemy-shield1").querySelector("span").textContent = "";
                 if(enemyCardLeftNumber !== 100){
                     chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
+                    conditionReset();
                 };
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-center-number")){
                 if(enemyCardCenterNumber + enemyShieldCenterNumber <= chargeRyou){
@@ -725,6 +727,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     damagePattern(damageFrom + "_card2_succeeded", chargeRyou);
                     myPoint();
                     document.getElementById("enemy-card-center").style.background = "white";
+                    chargeDelete(document.getElementById("enemy-charge2"));
                 }else if(enemyCardCenterNumber === 100){
                     alert("this is JOKER");
                     shieldDelete(document.querySelector(".selected").parentElement.querySelector(".my-shield"));
@@ -747,12 +750,14 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 document.getElementById("enemy-shield2").querySelector("span").textContent = "";
                 if(enemyCardCenterNumber !== 100){
                     chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
+                    conditionReset();
                 };
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-right-number")){
                 if(enemyCardRightNumber + enemyShieldRightNumber <= chargeRyou){
                     alert("attack succeeded");
                     myPoint();
                     document.getElementById("enemy-card-right").style.background = "white";
+                    chargeDelete(document.getElementById("enemy-charge3"));
                     damagePattern(damageFrom + "_card1_succeeded", chargeRyou);
                 }else if(enemyCardRightNumber === 100){
                     alert("this is JOKER");
@@ -1344,18 +1349,24 @@ async function enemyUpdate(){
             document.getElementById("my-card-left-number").parentElement.style.backgroundColor = "white";
             shieldDelete(document.getElementById("my-card-left").querySelector(".my-shield"));
             chargeDelete(document.getElementById("my-card-left").querySelector(".my-charge"));
+            guard3Update(0);
+            charge3Update(0);
             cardAdd();
         }else if(nanini.includes("中央")){
             document.getElementById("my-card-center-number").textContent = "";
             document.getElementById("my-card-center-number").parentElement.style.backgroundColor = "white";
             shieldDelete(document.getElementById("my-card-center").querySelector(".my-shield"));
             chargeDelete(document.getElementById("my-card-center").querySelector(".my-charge"));
+            guard2Update(0);
+            charge2Update(0);
             cardAdd();
         }else if(nanini.includes("右")){
             document.getElementById("my-card-right-number").textContent = "";
             document.getElementById("my-card-right-number").parentElement.style.backgroundColor = "white";
             shieldDelete(document.getElementById("my-card-right").querySelector(".my-shield"));
             chargeDelete(document.getElementById("my-card-right").querySelector(".my-charge"));
+            guard1Update(0);
+            charge1Update(0);
             cardAdd();
         };
         console.log("倒されたことを検知");
@@ -1364,10 +1375,13 @@ async function enemyUpdate(){
         dounatta = "のダメージに耐えました";
         if(nanini.includes("左")){
             shieldDelete(document.getElementById("my-card-left").querySelector(".my-shield"));
+            guard3Update(0);
         }else if(nanini.includes("中央")){
             shieldDelete(document.getElementById("my-card-center").querySelector(".my-shield"));
+            guard2Update(0);
         }else if(nanini.includes("右")){
             shieldDelete(document.getElementById("my-card-right").querySelector(".my-shield"));
+            guard1Update(0);
         };
         alert(nanini + nanikara + String(data.damage) + dounatta);
         console.log("耐えたことを検知");
@@ -1379,18 +1393,21 @@ async function enemyUpdate(){
             document.getElementById("my-card-left-number").parentElement.style.backgroundColor = "white";
             shieldDelete(document.getElementById("my-card-left").querySelector(".my-shield"));
             chargeDelete(document.getElementById("my-card-left").querySelector(".my-charge"));
+            charge3Update(0);
             cardAdd();
         }else if(nanini.includes("中央")){
             document.getElementById("my-card-center-number").textContent = "";   
             document.getElementById("my-card-center-number").parentElement.style.backgroundColor = "white"; 
             shieldDelete(document.getElementById("my-card-center").querySelector(".my-shield"));
             chargeDelete(document.getElementById("my-card-center").querySelector(".my-charge"));
+            charge2Update(0);
             cardAdd();
         }else if(nanini.includes("右")){
             document.getElementById("my-card-right-number").textContent = "";
             document.getElementById("my-card-right-number").parentElement.style.backgroundColor = "white";
             shieldDelete(document.getElementById("my-card-right").querySelector(".my-shield"));
             chargeDelete(document.getElementById("my-card-right").querySelector(".my-charge"));
+            charge1Update(0);
             cardAdd();
         };
         alert("JOKERに対する接触だったため一点入ります")
@@ -1426,23 +1443,20 @@ async function machi() {
                 }
             }
         )
-        .on("error", (error) => {
-            console.warn("📛 CHANNEL_ERROR:", error);
-            retrySubscribe(); // ← CHANNEL_ERRORにも再接続
-        })
-        .on("timeout", () => {
-            console.warn("⏳ TIMED_OUT: サーバー応答なし");
-            retrySubscribe(); // ← TIMED_OUTにも再接続
-        })
         .subscribe((status) => {
             console.log("🔄 サブスクリプションステータス:", status);
+
+            if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+                console.warn("⚠ 接続エラー発生:", status);
+                retrySubscribe();
+            }
         });
 }
 
 async function retrySubscribe() {
     console.log("🔁 再接続を試みます...");
-    await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒待ってから再接続
-    await subscribeToChannel();
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    await machi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
 }
 
 async function teishi() {
@@ -1460,6 +1474,7 @@ function youWin(){
     kougekiTeishi();
     boueiTeishi();
     turnUpdate();
+    conditionReset();
     document.getElementById("modoru").style.display = "block";
 }
 
@@ -1471,7 +1486,20 @@ function youLost(){
     kougekiTeishi();
     boueiTeishi();
     turnUpdate();
+    conditionReset();
     document.getElementById("modoru").style.display = "block";
+}
+
+function draw(){
+    owari = false;
+    document.getElementById("message").classList.remove("enemy-turn");
+    document.getElementById("message").textContent = "DRAW";
+    document.getElementById("message").style.display = "block";
+    kougekiTeishi();
+    boueiTeishi();
+    turnUpdate();
+    conditionReset();
+    document.getElementById("modoru").style.display = "block";    
 }
 
 function back(){
