@@ -24,8 +24,11 @@ function enemyExistCheck(){
 enemyExistCheck();
 
 // リロードチェック
+
 function reloadCheck(){
+
 }
+
 
 // 名前登録
 const myName = localStorage.getItem("username");
@@ -102,9 +105,11 @@ function firstHand(){
 firstHand();
 
 // 先行後攻
+let lastTurn = false;
 const value = localStorage.getItem("turn");
 if (value === "true") {
     Turn = true;
+    lastTurn = true;
 } else if (value === "false") {
     Turn = false;
 } else {
@@ -149,6 +154,7 @@ setTimeout(() => {
     document.getElementById("message").style.display = "none";
 }, 2000); 
 
+
 // セットカード設定
 let setcard = 0;
 setTimeout(() => {
@@ -173,8 +179,9 @@ setTimeout(() => {
                     vanishCard();
                     myCardRegister();
                     if(Turn){ // 先攻の場合
-                        senkou = false;
-                        myTurn();                   
+                        aitemachi();
+                        startPolling2();
+                        aitemachijoutai();
                     }else{ // 後攻の場合
                         kougekiTeishi();
                         boueiTeishi();
@@ -203,7 +210,6 @@ async function myCardRegister(){
     console.error("更新エラー:", error);
     }
 }
-
 // いらないカード消し
 function vanishCard() {
     document.querySelectorAll(".selected").forEach(card => {
@@ -215,6 +221,101 @@ function vanishCard() {
     document.querySelectorAll(".my-hand").forEach(hand => {
         hand.classList.remove("active");
     });    
+}
+// 相手待ち
+let realtimeChannel2 = null;
+async function aitemachi() {
+    if (realtimeChannel2) {
+        await supabase.removeChannel(realtimeChannel2);
+    }
+
+    realtimeChannel = supabase
+        .channel("my_channel2")
+        .on(
+            "postgres_changes",
+            {
+                event: "UPDATE",
+                schema: "public",
+                table: "battles",
+                filter: `name=eq.${enemyName}`,
+            },
+            (payload) => {
+                console.log("🔥 変更検知:", payload);
+                if (payload.old && payload.new && (payload.old.set_card1 !== payload.new.set_card1)) {
+                    console.log("リアルタイム取得でturnの変化をキャッチ");
+                    hukkatsu();
+                    teishi2();
+                    stopPolling();
+                }
+            }
+        )
+        .subscribe((status) => {
+            console.log("🔄 サブスクリプションステータス:", status);
+            if(status === "SUBSCRIBED"){
+                document.getElementById("connection-error").style.display = "none";
+            }
+
+            if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+                console.warn("⚠ 接続エラー発生:", status);
+                document.getElementById("connection-error").style.display = "block";
+                retrySubscribe2();
+            }
+        });
+}
+async function retrySubscribe2() {
+    console.log("🔁 再接続を試みます...");
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    await aitemachi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
+}
+// ポーリング開始
+let aitenojotai = null;
+function startPolling2() {
+    pollingId2 = setInterval(async () => {
+        const { data, error } = await supabase
+            .from("battles")
+            .select("set_card1")
+            .eq("name", enemyName)
+            .single();
+
+        if (!error && data.set_card1 && (data.set_card1 !== aitenojotai)) {
+            console.log("ポーリングでturnの変化をキャッチ");
+            hukkatsu();
+            teishi2();
+            stopPolling2();
+        }
+    }, 5000);
+}
+// ポーリング停止
+function stopPolling2() {
+    if (pollingId2 !== null) {
+        clearInterval(pollingId2);
+        pollingId2 = null;
+        console.log("ポーリング停止しました");
+    }
+}
+async function teishi2() {
+    if (realtimeChannel2) {
+        await supabase.removeChannel(realtimeChannel2);
+        realtimeChannel2 = null;
+    }
+}
+function aitemachijoutai(){
+    action = false;
+    document.getElementById("charge").style.display = "flex";
+    document.getElementById("attack").style.display = "flex";
+    document.getElementById("tokkou").style.display = "flex";
+    document.getElementById("charge").style.backgroundColor = "rgba(0, 0, 0, 0.5)";  
+    document.getElementById("attack").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    document.getElementById("tokkou").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    document.getElementById("change").style.display = "flex";
+    document.getElementById("shield").style.display = "flex";
+    document.getElementById("block").style.display = "flex";    
+    document.getElementById("change").style.backgroundColor = "rgba(0, 0, 0, 0.5)";  
+    document.getElementById("shield").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    document.getElementById("block").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    document.getElementById("message").textContent = "少しお待ちください";
+    document.getElementById("message").classList.add("enemy-turn");
+    document.getElementById("message").style.display = "block";
 }
 
 // チャージ構造　多分OK
@@ -472,19 +573,19 @@ document.querySelectorAll(".my-hand").forEach(hand => {
                     card.querySelector(".my-number").textContent = newCard;
                     card.style.backgroundColor = "rgb(206, 195, 229)";
                     if(card.classList.contains("card-left")){
-                        if(parseInt(newCard.match(/\d+/)[0]) !== null){
+                        if(newCard.replace(/\s/g, "") !== "JOKER"){
                             card3Update(parseInt(newCard.match(/\d+/)[0]));
                         }else{
                             card3Update(100);
                         }
                     }else if(card.classList.contains("card-center")){
-                        if(parseInt(newCard.match(/\d+/)[0]) !== null){
+                        if(newCard.replace(/\s/g, "") !== "JOKER"){
                             card2Update(parseInt(newCard.match(/\d+/)[0]));
                         }else{
                             card2Update(100);
                         }                     
                     }else{
-                        if(parseInt(newCard.match(/\d+/)[0]) !== null){
+                        if(newCard.replace(/\s/g, "") !== "JOKER"){
                             card1Update(parseInt(newCard.match(/\d+/)[0]));
                         }else{
                             card1Update(100);
@@ -1037,6 +1138,7 @@ function hukkatsu(){
     document.getElementById("block").style.backgroundColor = "rgb(0, 34, 255)"; 
     kougeki = true;
     bouei = true;
+    action = true;
     console.log("復活");
 }
 
@@ -1068,6 +1170,7 @@ function enemyTurn(){
     document.getElementById("message").classList.add("enemy-turn");
     document.getElementById("message").style.display = "block";
     machi();
+    startPolling();
     console.log("相手のターン中");
     console.trace();
 }
@@ -1343,7 +1446,7 @@ let dounatta = "";
 async function enemyUpdate(){
     const { data, error } = await supabase
     .from("battles")
-    .select("guard_card1, guard_card2, guard_card3, charge_card1, charge_card2, charge_card3, block, point, damage, damage_pattern")
+    .select("guard_card1, guard_card2, guard_card3, charge_card1, charge_card2, charge_card3, block, point, damage, damage_pattern, reload")
     .eq("name", enemyName)
     .single();
     if (error) {
@@ -1354,6 +1457,15 @@ async function enemyUpdate(){
     enemyShieldCenterNumber = data.guard_card2;
     enemyShieldRightNumber = data.guard_card3;
     enemyPoint(String(data.point));
+    if(String(data.reload) === "done"){
+        document.getElementById("connection-error").textContent = "";
+        document.getElementById("connection-error").style.display = "block";
+        alert("リロードされたため、不戦勝となります")
+        setTimeout(() => {
+            youWin();
+        }, 1000)
+        return;
+    }
     if(String(data.point) !== "3"){
         document.getElementById("message").classList.remove("enemy-turn");
         document.getElementById("message").textContent = "自分のターン";
@@ -1498,7 +1610,6 @@ async function enemyUpdate(){
 
 // ターン待ち
 let realtimeChannel = null;
-
 async function machi() {
     if (realtimeChannel) {
         await supabase.removeChannel(realtimeChannel);
@@ -1516,10 +1627,12 @@ async function machi() {
             },
             (payload) => {
                 console.log("🔥 変更検知:", payload);
-                if (payload.old && payload.new && payload.old.turn !== payload.new.turn) {
-                    console.log("▶ turnが変化したので hukkatsu 呼び出し");
+                if (payload.old && payload.new && (payload.old.turn !== payload.new.turn)) {
+                    lastTurn = payload.new.turn;
+                    console.log("リアルタイム取得でturnの変化をキャッチ");
                     hukkatsu();
                     teishi();
+                    stopPolling();
                 }
             }
         )
@@ -1536,11 +1649,36 @@ async function machi() {
             }
         });
 }
-
 async function retrySubscribe() {
     console.log("🔁 再接続を試みます...");
     await new Promise(resolve => setTimeout(resolve, 2000));
     await machi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
+}
+// ポーリング開始
+function startPolling() {
+    pollingId = setInterval(async () => {
+        const { data, error } = await supabase
+            .from("battles")
+            .select("turn")
+            .eq("name", myName)
+            .single();
+
+        if (!error && data.turn && (data.turn !== lastTurn)) {
+            lastTurn = data.turn;
+            console.log("ポーリングでturnの変化をキャッチ");
+            hukkatsu();
+            teishi();
+            stopPolling();
+        }
+    }, 10000);
+}
+// ポーリング停止
+function stopPolling() {
+    if (pollingId !== null) {
+        clearInterval(pollingId);
+        pollingId = null;
+        console.log("ポーリング停止しました");
+    }
 }
 
 async function teishi() {

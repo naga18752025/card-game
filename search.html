@@ -35,6 +35,37 @@
             <p id="loginName"></p>
         </div>
     </div>
+    <div id="rotate-warning" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        font-size: 24px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    ">
+        縦向きでプレイしてください
+    </div>
+
+    <script>
+    function checkOrientationByAspect() {
+        const isPortrait = window.innerHeight >= window.innerWidth;
+        const warning = document.getElementById("rotate-warning");
+        warning.style.display = isPortrait ? "none" : "flex";
+    }
+
+    // 最初にチェック
+    checkOrientationByAspect();
+
+    // 向きが変わったときにチェック
+    window.addEventListener("resize", checkOrientationByAspect);
+    window.addEventListener("orientationchange", checkOrientationByAspect);
+    </script>
     <script src="search.js" defer></script>
 </body>
 </html>

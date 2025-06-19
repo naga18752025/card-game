@@ -2,6 +2,7 @@ const supabase = window.supabase.createClient("https://ngvdppfzcgbkdtjlwbvh.supa
 
 let realtimeChannel = null;
 const isFirst = Math.random() < 0.5;
+const randomNumber = Math.floor(1000000000 + Math.random() * 9000000000);
 
 let logoutOK =true;
 let tsunoru = true;
@@ -30,6 +31,7 @@ const newdeck = createDeck();
 
 function wait(){
     if(tsunoru){
+        startPolling();
         wait2();
         tsunoru = false;
     };
@@ -37,6 +39,7 @@ function wait(){
 
 async function wait2(){
     localStorage.setItem("deck", JSON.stringify(newdeck));
+    localStorage.setItem("turnkanri", randomNumber);
     const name = localStorage.getItem("username");
     const { error: Error } = await supabase
         .from("waiters")
@@ -44,7 +47,8 @@ async function wait2(){
             { 
                 "player": name,
                 "turn": !isFirst,
-                "shared_deck": newdeck
+                "shared_deck": newdeck,
+                "TurnKanriNumber": randomNumber
             }
 
         ]);
@@ -83,12 +87,50 @@ async function wait2(){
                     setTimeout(() => {
                         window.location.href = "battle.html";
                     }, 1000);
+                    stopPolling();
                 }
             }
         )
         .subscribe((status) => {
             console.log("サブスクリプションステータス:", status);
         });
+}
+
+let pollingId = null;
+
+// ポーリング開始
+function startPolling() {
+    const name = localStorage.getItem("username");
+    let lastEnemy = null;
+    pollingId = setInterval(async () => {
+        const { data, error } = await supabase
+            .from("waiters")
+            .select("enemy")
+            .eq("player", name)
+            .single();
+
+        if (!error && data.enemy && (data.enemy !== lastEnemy)) {
+            lastEnemy = data.enemy;
+            localStorage.setItem("enemyname", data.enemy);
+            localStorage.setItem("turn", isFirst);
+            localStorage.setItem("reload", "none");
+            alert(`${data.enemy}が対戦相手として見つかりました！`);
+            back();
+            setTimeout(() => {
+                window.location.href = "battle.html";
+            }, 1000);
+            stopPolling();
+        }
+    }, 10000);
+}
+
+// ポーリング停止
+function stopPolling() {
+    if (pollingId !== null) {
+        clearInterval(pollingId);
+        pollingId = null;
+        console.log("ポーリング停止しました");
+    }
 }
 
 async function join(){
@@ -99,7 +141,7 @@ async function join(){
     document.getElementById("back2").style.display = "block";
     const { data, error } = await supabase
     .from("waiters")
-    .select("player, turn, shared_deck");
+    .select("player, turn, shared_deck, TurnKanriNumber");
     // テーブル要素を作成
     const table = document.createElement("table");
 
@@ -125,12 +167,13 @@ let hakken = true;
         if(hakken){
             localStorage.setItem("deck", JSON.stringify(waiter.shared_deck));
             localStorage.setItem("turn", waiter.turn);
+            localStorage.setItem("turnkanri", waiter.TurnKanriNumber);
             enemyLock(newElement.id);
             hakken = false;
             localStorage.setItem("reload", "none");
             setTimeout(() => {
                 window.location.href = "battle.html";
-            }, 1000);            
+            }, 1500);            
         }
 
     });
@@ -165,6 +208,7 @@ async function back(){
     setTimeout(() => {
         modoru = true;
     }, 500)
+    stopPolling();
 }
 
 function back2(){
@@ -207,4 +251,30 @@ function nameExistCheck(){
 }
 
 nameExistCheck()
+
+async function DataCheck(){
+    const name = localStorage.getItem("username");
+    // 既に存在しているかチェック
+    const { data, error } = await supabase
+    .from("waiters")
+    .select("id") // 主キーなど一意に識別できるものを選択
+    .eq("name", name);
+
+    // 存在していれば削除
+    if (data.length > 0) {
+    const { error: deleteError } = await supabase
+        .from("battles")
+        .delete()
+        .eq("player", name);
+
+    if (deleteError) {
+        console.error("削除エラー:", deleteError);
+    } else {
+        console.log("既存のデータを削除しました");
+    }
+    } else {
+    console.log("同名のデータは存在しません");
+    }    
+}
+DataCheck();
 
