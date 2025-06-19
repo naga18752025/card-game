@@ -181,7 +181,7 @@ setTimeout(() => {
                     };              
                 };
                 setcard++;
-            }
+            };
         });
     });
 }, 3000);
@@ -696,9 +696,16 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     damagePattern(damageFrom + "_card3_succeeded", chargeRyou);
                     myPoint();
                     document.getElementById("enemy-card-left").style.background = "white";
-                    chargeDelete(document.getElementById("enemy-charge1"));
+                    document.getElementById("enemy-charge1").style.display = "none";
                 }else if(enemyCardLeftNumber === 100){
                     alert("this is JOKER");
+                    if(document.querySelector(".selected").parentElement.classList.contains("card-left")){
+                        guard3Update(0);
+                    }else if(document.querySelector(".selected").parentElement.classList.contains("card-center")){
+                        guard2Update(0);
+                    }else{
+                        guard1Update(0);
+                    };
                     shieldDelete(document.querySelector(".selected").parentElement.querySelector(".my-shield"));
                     chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
                     kougekijoutai = false;
@@ -707,19 +714,26 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     kougekiTeishi();
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
-                    conditionReset();
-                    cardAdd();
                 }else{
 
                     alert("attack failed");
                     damagePattern(damageFrom + "_card3_failed", chargeRyou);
                 };
-                charge3Update(0);
+                if(document.querySelector(".selected").parentElement.classList.contains("card-left")){
+                    charge3Update(0);
+                }else if(document.querySelector(".selected").parentElement.classList.contains("card-center")){
+                    charge2Update(0);
+                }else{
+                    charge1Update(0);
+                };
                 document.getElementById("enemy-shield1").style.display = "none";
                 document.getElementById("enemy-shield1").querySelector("span").textContent = "";
                 if(enemyCardLeftNumber !== 100){
                     chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
                     conditionReset();
+                }else{
+                    conditionReset();
+                    cardAdd();
                 };
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-center-number")){
                 if(enemyCardCenterNumber + enemyShieldCenterNumber <= chargeRyou){
@@ -727,9 +741,16 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     damagePattern(damageFrom + "_card2_succeeded", chargeRyou);
                     myPoint();
                     document.getElementById("enemy-card-center").style.background = "white";
-                    chargeDelete(document.getElementById("enemy-charge2"));
+                    document.getElementById("enemy-charge2").style.display = "none";
                 }else if(enemyCardCenterNumber === 100){
                     alert("this is JOKER");
+                    if(document.querySelector(".selected").parentElement.classList.contains("card-left")){
+                        guard3Update(0);
+                    }else if(document.querySelector(".selected").parentElement.classList.contains("card-center")){
+                        guard2Update(0);
+                    }else{
+                        guard1Update(0);
+                    };
                     shieldDelete(document.querySelector(".selected").parentElement.querySelector(".my-shield"));
                     chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
                     kougekijoutai = false;
@@ -738,29 +759,43 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     kougekiTeishi();
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
-                    conditionReset();
-                    cardAdd();
                 }else{
 
                     alert("attack failed");
                     damagePattern(damageFrom + "_card2_failed", chargeRyou);                    
                 };
-                charge2Update(0);
+                    if(document.querySelector(".selected").parentElement.classList.contains("card-left")){
+                        charge3Update(0);
+                    }else if(document.querySelector(".selected").parentElement.classList.contains("card-center")){
+                        charge2Update(0);
+                    }else{
+                        charge1Update(0);
+                    };
                 document.getElementById("enemy-shield2").style.display = "none";
                 document.getElementById("enemy-shield2").querySelector("span").textContent = "";
                 if(enemyCardCenterNumber !== 100){
                     chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
                     conditionReset();
+                }else{
+                    conditionReset();
+                    cardAdd();
                 };
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-right-number")){
                 if(enemyCardRightNumber + enemyShieldRightNumber <= chargeRyou){
                     alert("attack succeeded");
                     myPoint();
                     document.getElementById("enemy-card-right").style.background = "white";
-                    chargeDelete(document.getElementById("enemy-charge3"));
+                    document.getElementById("enemy-charge3").style.display = "none";
                     damagePattern(damageFrom + "_card1_succeeded", chargeRyou);
                 }else if(enemyCardRightNumber === 100){
                     alert("this is JOKER");
+                    if(document.querySelector(".selected").parentElement.classList.contains("card-left")){
+                        guard3Update(0);
+                    }else if(document.querySelector(".selected").parentElement.classList.contains("card-center")){
+                        guard2Update(0);
+                    }else{
+                        guard1Update(0);
+                    };
                     shieldDelete(document.querySelector(".selected").parentElement.querySelector(".my-shield"));
                     chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
                     kougekijoutai = false;
@@ -769,72 +804,117 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     kougekiTeishi();
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
-                    conditionReset();
-                    cardAdd(); 
                 }else{
 
                     alert("attack failed");
                     damagePattern(damageFrom + "_card1_failed", chargeRyou);                  
                 };
-                charge1Update(0);
+                    if(document.querySelector(".selected").parentElement.classList.contains("card-left")){
+                        charge3Update(0);
+                    }else if(document.querySelector(".selected").parentElement.classList.contains("card-center")){
+                        charge2Update(0);
+                    }else{
+                        charge1Update(0);
+                    }
                 document.getElementById("enemy-shield3").style.display = "none";
                 document.getElementById("enemy-shield3").querySelector("span").textContent = "";
                 if(enemyCardRightNumber !== 100){
                     chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
                     conditionReset();
+                }else{
+                    conditionReset();
+                    cardAdd(); 
                 };
             };
             kougekiTeishi();
         }else if(!tokkouSelect){ // トッコウ用カード選択後
             const tokkouNumber = parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]);
             if(card.querySelector(".my-number").classList.contains("enemy-card-left-number")){
+                if(document.querySelector(".selected").parentElement.classList.contains("card-left")){
+                    guard3Update(0);
+                    charge3Update(0);
+                }else if(document.querySelector(".selected").parentElement.classList.contains("card-center")){
+                    guard2Update(0);
+                    charge2Update(0);
+                }else{
+                    guard1Update(0);
+                    charge1Update(0);
+                };
                 if(enemyCardLeftNumber + enemyShieldLeftNumber <= tokkouNumber){
                     alert(enemyCardLeftNumber + enemyShieldLeftNumber);
                     damagePattern(damageFrom + "_card3_succeeded", tokkouNumber);
                     myPoint();
                     document.getElementById("enemy-charge3").style.display = "none"; 
+                    document.getElementById("enemy-card-left").style.background = "white";
                 }else if(enemyCardLeftNumber === 100){
+                    document.getElementById("enemy-charge3").style.display = "none"; 
                     alert("this is JOKER");
                     damagePattern(damageFrom + "_card3_failed_JOKER", tokkouNumber);
+                    document.getElementById("enemy-charge3").style.display = "none"; 
+                    document.getElementById("enemy-card-left").style.background = "white";
                 }else{
                     alert("tokkou failed");
                     damagePattern(damageFrom + "_card3_failed", tokkouNumber);
                 };
                 document.getElementById("enemy-shield1").style.display = "none";
                 document.getElementById("enemy-shield1").textContent = "";
-                document.getElementById("enemy-card-left").style.background = "white";
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-center-number")){
+                if(document.querySelector(".selected").parentElement.classList.contains("card-left")){
+                    guard3Update(0);
+                    charge3Update(0);
+                }else if(document.querySelector(".selected").parentElement.classList.contains("card-center")){
+                    guard2Update(0);
+                    charge2Update(0);
+                }else{
+                    guard1Update(0);
+                    charge1Update(0);
+                };
                 if(enemyCardCenterNumber + enemyShieldCenterNumber <= tokkouNumber){
                     alert("tokkou succeeded");               
                     damagePattern(damageFrom + "_card2_succeeded", tokkouNumber);
                     myPoint();
                     document.getElementById("enemy-charge3").style.display = "none"; 
+                    document.getElementById("enemy-card-center").style.background = "white";
                 }else if(enemyCardCenterNumber === 100){
+                    document.getElementById("enemy-charge3").style.display = "none"; 
                     alert("this is JOKER");
                     damagePattern(damageFrom + "_card2_failed_JOKER", tokkouNumber);
+                    document.getElementById("enemy-card-center").style.background = "white";
                 }else{
                     alert("tokkou failed");
                     damagePattern(damageFrom + "_card2_failed", tokkouNumber);
                 };
                 document.getElementById("enemy-shield2").style.display = "none";
                 document.getElementById("enemy-shield2").textContent = "";
-                document.getElementById("enemy-card-center").style.background = "white";
+
             }else if(card.querySelector(".my-number").classList.contains("enemy-card-right-number")){
+                if(document.querySelector(".selected").parentElement.classList.contains("card-left")){
+                    guard3Update(0);
+                    charge3Update(0);
+                }else if(document.querySelector(".selected").parentElement.classList.contains("card-center")){
+                    guard2Update(0);
+                    charge2Update(0);
+                }else{
+                    guard1Update(0);
+                    charge1Update(0);
+                };
                 if(enemyCardRightNumber + enemyShieldRightNumber <= tokkouNumber){
+                    document.getElementById("enemy-charge3").style.display = "none";
                     alert("tokkou succeeded");
                     damagePattern(damageFrom + "_card1_succeeded", tokkouNumber);
                     myPoint();
-                    document.getElementById("enemy-charge3").style.display = "none";                   
+                    document.getElementById("enemy-card-right").style.background = "white";
                 }else if(enemyCardRightNumber === 100){
+                    document.getElementById("enemy-charge3").style.display = "none";
                     alert("this is JOKER")
                     damagePattern(damageFrom + "_card1_failed_JOKER", tokkouNumber);
+                    document.getElementById("enemy-card-right").style.background = "white";
                 }else{
                     alert("tokkou failed");
                     damagePattern(damageFrom + "_card1_failed", tokkouNumber);
                 }; 
                 document.getElementById("enemy-shield3").style.display = "none";
                 document.getElementById("enemy-shield3").textContent = "";
-                document.getElementById("enemy-card-right").style.background = "white";
             }; 
             kougekijoutai = false;
             enemyPoint(0);
@@ -1445,9 +1525,13 @@ async function machi() {
         )
         .subscribe((status) => {
             console.log("🔄 サブスクリプションステータス:", status);
+            if(status === "SUBSCRIBED"){
+                document.getElementById("connection-error").style.display = "none";
+            }
 
             if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
                 console.warn("⚠ 接続エラー発生:", status);
+                document.getElementById("connection-error").style.display = "block";
                 retrySubscribe();
             }
         });

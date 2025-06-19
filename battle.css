@@ -377,10 +377,13 @@ p, span{
 #modoru{
   position: absolute;
   bottom:15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: rgba(255, 255, 255, 0.7);
   padding: 5vw;
   border: none;
   border-radius: 2vw;
+  z-index: 9999;
 }
 
 #botan{
@@ -392,4 +395,16 @@ p, span{
   padding:2vw;
   color: rgb(85, 85, 85);
   font-family: "M PLUS Rounded 1c", sans-serif;
+  z-index: 9999;
+}
+
+#connection-error{
+  position: absolute;
+  font-size: 3.2vw;
+  bottom: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.5);
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  z-index: 9999;
 }
