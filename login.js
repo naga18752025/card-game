@@ -65,3 +65,7 @@ function nameExistCheck(){
 }
 
 nameExistCheck()
+
+function topback(){
+    window.location.href = "index.html";
+}

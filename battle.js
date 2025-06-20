@@ -23,13 +23,6 @@ function enemyExistCheck(){
 }
 enemyExistCheck();
 
-// リロードチェック
-
-function reloadCheck(){
-
-}
-
-
 // 名前登録
 const myName = localStorage.getItem("username");
 const enemyName = localStorage.getItem("enemyname");
@@ -1501,7 +1494,7 @@ async function enemyUpdate(){
     }else{
         enemyPoint(String(data.point));
     }
-    if(String(data.point) !== "3"){
+    if((String(data.point) !== "3") && !(document.getElementById("my-point").textContent === "2" && data.damage_pattern.includes("JOKER"))){
         document.getElementById("message").classList.remove("enemy-turn");
         document.getElementById("message").textContent = "自分のターン";
         document.getElementById("message").style.display = "block";
@@ -1732,6 +1725,7 @@ function youWin(){
     boueiTeishi();
     turnUpdate();
     conditionReset();
+    document.getElementById("reloadsitayo").style.display = "flex";
     document.getElementById("modoru").style.display = "block";
 }
 
@@ -1744,6 +1738,7 @@ function youLost(){
     boueiTeishi();
     turnUpdate();
     conditionReset();
+    document.getElementById("reloadsitayo").style.display = "flex";
     document.getElementById("modoru").style.display = "block";
 }
 
@@ -1756,6 +1751,7 @@ function draw(){
     boueiTeishi();
     turnUpdate();
     conditionReset();
+    document.getElementById("reloadsitayo").style.display = "flex";
     document.getElementById("modoru").style.display = "block";    
 }
 

@@ -75,7 +75,12 @@ html, body {
     margin-bottom: 5vh;
     color:rgb(0, 0, 0);
     font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
+
 
 .moji{
     font-size: 24px;
@@ -98,4 +103,19 @@ html, body {
 
 #loginButton:hover{
     background-color: rgb(47, 66, 189);
+}
+
+#topbackbutton{
+    padding: 8px;
+    font-size: 20px;
+    background-color: rgb(246, 246, 246);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 3px #828282;
+    color: black;
+    font-family: "M PLUS Rounded 1c";
+}
+
+#topbackbutton:hover{
+    background-color:rgb(203, 203, 203);
 }
