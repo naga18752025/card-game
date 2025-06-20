@@ -1651,7 +1651,7 @@ async function machi() {
     }
 
     realtimeChannel = supabase
-        .channel("my_channel")
+        .channel(`my_channel ${myName}`)
         .on(
             "postgres_changes",
             {
