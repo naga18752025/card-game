@@ -813,6 +813,8 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     damagePattern(damageFrom + "_card3_failed_JOKER", chargeRyou);
                     enemyPoint(0);
                     kougekiTeishi();
+                    document.getElementById("enemy-card-left").style.background = "white";
+                    document.getElementById("enemy-charge1").style.display = "none";
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
                 }else{
@@ -858,6 +860,8 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     damagePattern(damageFrom + "_card2_failed_JOKER", chargeRyou);
                     enemyPoint(0);
                     kougekiTeishi();
+                    document.getElementById("enemy-card-center").style.background = "white";
+                    document.getElementById("enemy-charge2").style.display = "none";
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
                 }else{
@@ -903,6 +907,8 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     damagePattern(damageFrom + "_card1_failed_JOKER", chargeRyou);
                     enemyPoint(0);
                     kougekiTeishi();
+                    document.getElementById("enemy-card-right").style.background = "white";
+                    document.getElementById("enemy-charge3").style.display = "none";
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
                 }else{
@@ -942,7 +948,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     charge1Update(0);
                 };
                 if(enemyCardLeftNumber + enemyShieldLeftNumber <= tokkouNumber){
-                    alert(enemyCardLeftNumber + enemyShieldLeftNumber);
+                    alert("tokkou succeeded");
                     damagePattern(damageFrom + "_card3_succeeded", tokkouNumber);
                     myPoint();
                     document.getElementById("enemy-charge3").style.display = "none"; 
