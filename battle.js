@@ -245,7 +245,7 @@ async function aitemachi() {
                     console.log("リアルタイム取得でturnの変化をキャッチ");
                     hukkatsu();
                     teishi2();
-                    stopPolling();
+                    stopPolling2();
                 }
             }
         )
@@ -613,9 +613,9 @@ document.querySelectorAll(".my-hand").forEach(hand => {
                 console.log("攻撃系復活");
                 console.trace();
             }else{
+                kougekijoutai = true;
                 kougekiTeishi();
             }
-            kougekijoutai = true;
 
             conditionReset();
             console.log("新しいカード設置完了");
