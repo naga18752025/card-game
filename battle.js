@@ -936,6 +936,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
             kougekiTeishi();
         }else if(!tokkouSelect){ // トッコウ用カード選択後
             const tokkouNumber = parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]);
+            let hikiwake = true;
             if(card.querySelector(".my-number").classList.contains("enemy-card-left-number")){
                 if(document.querySelector(".selected").parentElement.classList.contains("card-left")){
                     guard3Update(0);
@@ -949,8 +950,16 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 };
                 if(enemyCardLeftNumber + enemyShieldLeftNumber <= tokkouNumber){
                     alert("tokkou succeeded");
-                    damagePattern(damageFrom + "_card3_succeeded", tokkouNumber);
-                    myPoint();
+                    if((document.getElementById("enemy-point").textContent.replace(/\s/g, "") === "2") && (document.getElementById("my-point").textContent.replace(/\s/g, "") === "2")){
+                        document.getElementById("enemy-point").textContent = "3";
+                        document.getElementById("my-point").textContent = "3";
+                        damagePattern(damageFrom + "_card3_succeeded_draw", tokkouNumber);
+                        myPointUpdate(3);
+                        hikiwake = false;
+                    }else{
+                        damagePattern(damageFrom + "_card3_succeeded", tokkouNumber);
+                        myPoint();
+                    }
                     document.getElementById("enemy-charge3").style.display = "none"; 
                     document.getElementById("enemy-card-left").style.background = "white";
                 }else if(enemyCardLeftNumber === 100){
@@ -978,8 +987,16 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 };
                 if(enemyCardCenterNumber + enemyShieldCenterNumber <= tokkouNumber){
                     alert("tokkou succeeded");               
-                    damagePattern(damageFrom + "_card2_succeeded", tokkouNumber);
-                    myPoint();
+                    if((document.getElementById("enemy-point").textContent.replace(/\s/g, "") === "2") && (document.getElementById("my-point").textContent.replace(/\s/g, "") === "2")){
+                        document.getElementById("enemy-point").textContent = "3";
+                        document.getElementById("my-point").textContent = "3";
+                        damagePattern(damageFrom + "_card3_succeeded_draw", tokkouNumber);
+                        myPointUpdate(3);
+                        hikiwake = false;
+                    }else{
+                        damagePattern(damageFrom + "_card2_succeeded", tokkouNumber);
+                        myPoint();
+                    }
                     document.getElementById("enemy-charge3").style.display = "none"; 
                     document.getElementById("enemy-card-center").style.background = "white";
                 }else if(enemyCardCenterNumber === 100){
@@ -1008,8 +1025,16 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 if(enemyCardRightNumber + enemyShieldRightNumber <= tokkouNumber){
                     document.getElementById("enemy-charge3").style.display = "none";
                     alert("tokkou succeeded");
-                    damagePattern(damageFrom + "_card1_succeeded", tokkouNumber);
-                    myPoint();
+                    if((document.getElementById("enemy-point").textContent.replace(/\s/g, "") === "2") && (document.getElementById("my-point").textContent.replace(/\s/g, "") === "2")){
+                        document.getElementById("enemy-point").textContent = "3";
+                        document.getElementById("my-point").textContent = "3";
+                        damagePattern(damageFrom + "_card3_succeeded_draw", tokkouNumber);
+                        myPointUpdate(3);
+                        hikiwake = false;
+                    }else{
+                        damagePattern(damageFrom + "_card1_succeeded", tokkouNumber);
+                        myPoint();
+                    }
                     document.getElementById("enemy-card-right").style.background = "white";
                 }else if(enemyCardRightNumber === 100){
                     document.getElementById("enemy-charge3").style.display = "none";
@@ -1024,14 +1049,18 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 document.getElementById("enemy-shield3").textContent = "";
             }; 
             kougekijoutai = false;
-            enemyPoint(0);
-            kougekiTeishi();
             shieldDelete(document.querySelector(".selected").parentElement.querySelector(".my-shield"));
             chargeDelete(document.querySelector(".selected").parentElement.querySelector(".my-charge"));
             document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
             document.querySelector(".selected").textContent = "";
-            conditionReset();
-            cardAdd();          
+            if(hikiwake){
+                enemyPoint(0);
+                kougekiTeishi();
+                conditionReset();
+                cardAdd();        
+            }else{
+                draw();
+            }
         };
     });
 });
@@ -1462,15 +1491,15 @@ async function enemyUpdate(){
     enemyShieldLeftNumber = data.guard_card1;
     enemyShieldCenterNumber = data.guard_card2;
     enemyShieldRightNumber = data.guard_card3;
-    enemyPoint(String(data.point));
-    if(String(data.reload) === "done"){
-        document.getElementById("connection-error").textContent = "";
-        document.getElementById("connection-error").style.display = "block";
-        alert("リロードされたため、不戦勝となります")
-        setTimeout(() => {
-            youWin();
-        }, 1000)
-        return;
+    if((data.point === 3) && data.damage_pattern.includes("draw")){
+        document.getElementById("enemy-point").textContent = "3";
+        document.getElementById("my-point").textContent = "3";
+        draw();
+    }else if(data.damage_pattern.includes("tokkou")){
+        myPoint()
+        enemyPoint(String(data.point));
+    }else{
+        enemyPoint(String(data.point));
     }
     if(String(data.point) !== "3"){
         document.getElementById("message").classList.remove("enemy-turn");
