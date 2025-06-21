@@ -261,12 +261,12 @@ async function DataCheck(){
     const { data, error } = await supabase
     .from("waiters")
     .select("id") // 主キーなど一意に識別できるものを選択
-    .eq("name", name);
+    .eq("player", name);
 
     // 存在していれば削除
     if (data.length > 0) {
     const { error: deleteError } = await supabase
-        .from("battles")
+        .from("waiters")
         .delete()
         .eq("player", name);
 
