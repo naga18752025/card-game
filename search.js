@@ -82,6 +82,7 @@ async function wait2(){
                     localStorage.setItem("enemyname", payload.new["enemy"]);
                     localStorage.setItem("turn", isFirst);
                     localStorage.setItem("reload", "none");
+                    document.getElementById("teishi").style.display = "flex";
                     alert(`${payload.new["enemy"]}が対戦相手として見つかりました！`);
                     back();
                     setTimeout(() => {
@@ -165,9 +166,11 @@ let hakken = true;
     const id_ = newElement.id
     newElement.addEventListener("click", () => {
         if(hakken){
+            document.getElementById("teishi").style.display = "flex";
             localStorage.setItem("deck", JSON.stringify(waiter.shared_deck));
             localStorage.setItem("turn", waiter.turn);
             localStorage.setItem("turnkanri", waiter.TurnKanriNumber);
+            alert("対戦を開始します")
             enemyLock(newElement.id);
             hakken = false;
             localStorage.setItem("reload", "none");

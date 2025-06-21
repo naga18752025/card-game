@@ -236,6 +236,7 @@ async function aitemachi() {
                 console.log("🔥 変更検知:", payload);
                 if (payload.old && payload.new && (payload.old.set_card1 !== payload.new.set_card1)) {
                     console.log("リアルタイム取得でturnの変化をキャッチ");
+                    document.getElementById("connection-error").style.display = "none";
                     hukkatsu();
                     teishi2();
                     stopPolling2();
@@ -272,6 +273,7 @@ function startPolling2() {
 
         if (!error && data.set_card1 && (data.set_card1 !== aitenojotai)) {
             console.log("ポーリングでturnの変化をキャッチ");
+            document.getElementById("connection-error").style.display = "none";
             hukkatsu();
             teishi2();
             stopPolling2();
@@ -1658,6 +1660,7 @@ async function machi() {
                 if (payload.old && payload.new && (payload.old.turn !== payload.new.turn)) {
                     lastTurn = payload.new.turn;
                     console.log("リアルタイム取得でturnの変化をキャッチ");
+                    document.getElementById("connection-error").style.display = "none";
                     hukkatsu();
                     teishi();
                     stopPolling();
@@ -1694,6 +1697,7 @@ function startPolling() {
         if (!error && data.turn && (data.turn !== lastTurn)) {
             lastTurn = data.turn;
             console.log("ポーリングでturnの変化をキャッチ");
+            document.getElementById("connection-error").style.display = "none";
             hukkatsu();
             teishi();
             stopPolling();
