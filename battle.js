@@ -334,9 +334,6 @@ document.getElementById("charge").addEventListener("click", function(){
 // アタック構造　途中
 document.getElementById("attack").addEventListener("click", function(){
     if(attack && action && kougeki){
-        card1Check();
-        card2Check();
-        card3Check();
         let chargeJoutai = false;
         document.querySelectorAll(".my-card").forEach(card => {
             if((card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0] !== "0") && (card.querySelector(".my-number").textContent.replace(/\s/g, "") !== "JOKER") && (card.querySelector(".my-block").style.display === "none")){
@@ -361,9 +358,6 @@ document.getElementById("attack").addEventListener("click", function(){
 // トッコウ構造　途中
 document.getElementById("tokkou").addEventListener("click", function(){
     if(tokkou && action && kougeki){
-        card1Check();
-        card2Check();
-        card3Check();
         document.querySelectorAll(".my-card").forEach(card => {
             if((card.querySelector(".my-number").textContent.replace(/\s/g, "") !== "JOKER") && (card.querySelector(".my-block").style.display === "none")){
                 card.classList.add("active"); 
@@ -1207,6 +1201,7 @@ function enemyTurn(){
 
 // ターン情報更新
 function turnUpdate(){
+    console.log("ターン情報更新")
     setTimeout(() => {
         turnUpdate2();
     }, 1500);
@@ -1421,7 +1416,12 @@ async function card1Check(){
     if (error) {
     console.error("取得エラー:", error);
     };
-
+    if(enemyCardLeftNumber === 0){
+        enemyCardLeftNumber = data.set_card1;
+    };
+    if(enemyCardLeftNumber !== data.set_card1){
+        alert("相手の左のセットカードが変更されました")
+    };
     enemyCardLeftNumber = data.set_card1;
 }
 async function card2Check(){
@@ -1434,7 +1434,12 @@ async function card2Check(){
     if (error) {
     console.error("取得エラー:", error);
     };
-
+    if(enemyCardCenterNumber === 0){
+        enemyCardCenterNumber = data.set_card2;
+    };
+    if(enemyCardCenterNumber !== data.set_card2){
+        alert("相手の中央のセットカードが変更されました")
+    };
     enemyCardCenterNumber = data.set_card2;
 }
 async function card3Check(){
@@ -1447,7 +1452,12 @@ async function card3Check(){
     if (error) {
     console.error("取得エラー:", error);
     };
-
+    if(enemyCardRightNumber === 0){
+        enemyCardRightNumber = data.set_card3;
+    };
+    if(enemyCardRightNumber !== data.set_card3){
+        alert("相手の右のセットカードが変更されました")
+    };
     enemyCardRightNumber = data.set_card3;
 }  
 
@@ -1482,7 +1492,6 @@ async function enemyUpdate(){
     if (error) {
     console.error("取得エラー:", error);
     };
-
     enemyShieldLeftNumber = data.guard_card1;
     enemyShieldCenterNumber = data.guard_card2;
     enemyShieldRightNumber = data.guard_card3;
@@ -1634,6 +1643,9 @@ async function enemyUpdate(){
         };
         alert("JOKERに対する接触だったため一点入ります")
     };
+    card1Check();
+    card2Check();
+    card3Check();
     console.log("敵の状態チェック終了");
 }
 
@@ -1657,13 +1669,19 @@ async function machi() {
             },
             (payload) => {
                 console.log("🔥 変更検知:", payload);
-                if (payload.old && payload.new && (payload.old.turn !== payload.new.turn)) {
-                    lastTurn = payload.new.turn;
-                    console.log("リアルタイム取得でturnの変化をキャッチ");
-                    document.getElementById("connection-error").style.display = "none";
+                if (!payload.old || !payload.new) return;
+
+                const oldTurn = payload.old.turn;
+                const newTurn = payload.new.turn;
+
+                if (oldTurn !== newTurn) {
+                    console.log("✅ turnの変化を検知しました！");
+                    lastTurn = newTurn;
                     hukkatsu();
                     teishi();
                     stopPolling();
+                } else {
+                    console.log("🔕 turnは変化していない。他のカラムの変更です");
                 }
             }
         )
