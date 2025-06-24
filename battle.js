@@ -23,6 +23,16 @@ function enemyExistCheck(){
 }
 enemyExistCheck();
 
+function reloadCheck(){
+    if(localStorage.getItem("reload") === "none"){
+        localStorage.setItem("reload", "done")
+    }else{
+        alert("不正な操作を検知しました");
+        window.location.href = "index.html";
+    };
+}
+// reloadCheck();
+
 // 名前登録
 const myName = localStorage.getItem("username");
 const enemyName = localStorage.getItem("enemyname");
@@ -1213,6 +1223,7 @@ function myTurn(){
     document.getElementById("enemy-card-right").style.background = "linear-gradient(145deg, rgb(180, 161, 222), rgb(123, 54, 183)";
     enemyUpdate();
     damagePattern("", 0);
+    cancelTimer();
 }
 
 // 相手のターン中
@@ -1228,6 +1239,17 @@ function enemyTurn(){
     startPolling();
     console.log("相手のターン中");
     console.trace();
+    startTimer();
+}
+let timeoutId;
+function startTimer() {
+    timeoutId = setTimeout(() => {
+        alert("相手がリロードした可能性があります。その場合はリロードしてこのバトルを中止してください。");
+    }, 100000);
+}
+function cancelTimer() {
+    clearTimeout(timeoutId);
+    console.log("タイマーをキャンセルしました");
 }
 
 // ターン情報更新
@@ -1471,7 +1493,7 @@ async function card2Check(){
         enemyCardCenterNumber = data.set_card2;
     };
     if(enemyCardCenterNumber !== data.set_card2){
-        let houkoku =  "相手の左のセットカードが"+ String(enemyCardCenterNumber) +  "から変更されました";
+        let houkoku =  "相手の中央のセットカードが"+ String(enemyCardCenterNumber) +  "から変更されました";
         alert(houkoku);
     };
     enemyCardCenterNumber = data.set_card2;
@@ -1490,7 +1512,7 @@ async function card3Check(){
         enemyCardRightNumber = data.set_card3;
     };
     if(enemyCardRightNumber !== data.set_card3){
-        let houkoku =  "相手の左のセットカードが"+ String(enemyCardRightNumber) +  "から変更されました";
+        let houkoku =  "相手の右のセットカードが"+ String(enemyCardRightNumber) +  "から変更されました";
         alert(houkoku);
     };
     enemyCardRightNumber = data.set_card3;
