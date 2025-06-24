@@ -3,7 +3,11 @@ document.getElementById("rule").addEventListener("click", function () {
 });
 
 document.getElementById("start").addEventListener("click", function () {
-  window.location.href = "login.html"; // 遷移先のファイル名
+  if(localStorage.getItem("username") !== null){
+    window.location.href = "search.html";
+  }else{
+    window.location.href = "login.html"; // 遷移先のファイル名
+  }
 });
 
 function nameExistCheck(){
