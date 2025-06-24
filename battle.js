@@ -66,7 +66,7 @@ myNameDataCheck();
 
 // 山札作成
 function createDeck() {
-    const suits = ['♠', '♥', '♦', '♣'];  // 絵柄（省略してもOK）
+    const suits = ['♠', '♥', '♦', '♣'];  // 絵柄
     const deck = [];
     // 1〜13を4スート分入れる（1=A, 11=J, 12=Q, 13=K）
     for (let suit of suits) {
@@ -74,7 +74,7 @@ function createDeck() {
             deck.push(`${suit}${i}`);
         };
     };
-    // JOKERを1枚（必要に応じて増やせる）
+    // JOKERを2枚
     deck.push("JOKER");
     deck.push("JOKER");
     // シャッフル（Fisher-Yatesアルゴリズム）
@@ -84,7 +84,7 @@ function createDeck() {
     };
     return deck;
 }
-const deck = createDeck();
+let deck = createDeck();
 
 // 初手札６枚数字設定
 document.body.classList.add("overlay");
@@ -110,9 +110,9 @@ if (value === "true") {
 }
 
 // 相手のカードの数
-let enemyCardLeftNumber = 0;
-let enemyCardCenterNumber = 0;
-let enemyCardRightNumber = 0;
+let enemyCardLeftNumber = 1000;
+let enemyCardCenterNumber = 1000;
+let enemyCardRightNumber = 1000;
 let enemyShieldLeftNumber = 0;
 let enemyShieldCenterNumber = 0;
 let enemyShieldRightNumber = 0;
@@ -584,6 +584,11 @@ document.querySelectorAll(".my-hand").forEach(hand => {
             });
             hand.querySelector(".my-number").textContent = deck[setCount];
             setCount ++;
+            if(setCount === 53){
+                deck = createDeck();
+                setCount = 0;
+                alert("自分の山札を使い切ったため、新しい山札になりました")
+            }
             if(!boueijoutai){
                 bouei = true;
                 document.getElementById("change").style.backgroundColor = "rgb(0, 34, 255)";  
@@ -604,8 +609,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
             }else{
                 kougekijoutai = true;
                 kougekiTeishi();
-            }
-
+            };
             conditionReset();
             console.log("新しいカード設置完了");
             console.trace();
@@ -631,6 +635,11 @@ document.querySelectorAll(".my-card").forEach(card => {
                 kougekiTeishi();
                 document.querySelector(".selected").textContent = deck[setCount];
                 setCount ++;
+                if(setCount === 53){
+                    deck = createDeck();
+                    setCount = 0;
+                    alert("自分の山札を使い切ったため、新しい山札になりました")
+                }
                 conditionReset();            
             }else if(chargeRyou <= parseInt(card.querySelector(".my-number").textContent.match(/\d+/)[0])){           
                 card.querySelector(".my-charge").querySelector("span").textContent = String(chargeRyou);
@@ -645,6 +654,11 @@ document.querySelectorAll(".my-card").forEach(card => {
                 kougekiTeishi(); 
                 document.querySelector(".selected").textContent = deck[setCount]; 
                 setCount ++;
+                if(setCount === 53){
+                    deck = createDeck();
+                    setCount = 0;
+                    alert("自分の山札を使い切ったため、新しい山札になりました")
+                }
                 conditionReset();
             }else{
                 alert("セットカードの数を超えてしまいます");
@@ -666,6 +680,11 @@ document.querySelectorAll(".my-card").forEach(card => {
                 boueiTeishi();
                 document.querySelector(".selected").textContent = deck[setCount]; 
                 setCount ++;
+                if(setCount === 53){
+                    deck = createDeck();
+                    setCount = 0;
+                    alert("自分の山札を使い切ったため、新しい山札になりました")
+                };
                 conditionReset();                                                    
             };
         }else if(!changeSelect){ // チェンジ用カード選択後
@@ -689,6 +708,11 @@ document.querySelectorAll(".my-card").forEach(card => {
             boueiTeishi();            
             document.querySelector(".selected").textContent = deck[setCount]; 
             setCount ++;
+            if(setCount === 53){
+                deck = createDeck();
+                setCount = 0;
+                alert("自分の山札を使い切ったため、新しい山札になりました")
+            }
             conditionReset();        
         }else if(!attack && attackSelect){ // アタック有効状態　かつ　アタック用カード選択前
             if((card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0] !== "0") && (card.querySelector(".my-number").textContent.replace(/\s/g, "") !== "JOKER") && (card.querySelector(".my-block").style.display === "none")){
@@ -769,6 +793,11 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 }
                 document.querySelector(".selected").textContent = deck[setCount];
                 setCount ++;
+                if(setCount === 53){
+                    deck = createDeck();
+                    setCount = 0;
+                    alert("自分の山札を使い切ったため、新しい山札になりました")
+                }
                 blockjoutai = false;
                 conditionReset();
                 boueiTeishi();
@@ -1418,7 +1447,7 @@ async function card1Check(){
     if (error) {
     console.error("取得エラー:", error);
     };
-    if(enemyCardLeftNumber === 0){
+    if(enemyCardLeftNumber === 1000){
         enemyCardLeftNumber = data.set_card1;
     };
     if(enemyCardLeftNumber !== data.set_card1){
@@ -1427,6 +1456,7 @@ async function card1Check(){
     enemyCardLeftNumber = data.set_card1;
 }
 async function card2Check(){
+
     const { data, error } = await supabase
     .from("battles")
     .select("set_card2")
@@ -1436,7 +1466,7 @@ async function card2Check(){
     if (error) {
     console.error("取得エラー:", error);
     };
-    if(enemyCardCenterNumber === 0){
+    if(enemyCardCenterNumber === 1000){
         enemyCardCenterNumber = data.set_card2;
     };
     if(enemyCardCenterNumber !== data.set_card2){
@@ -1454,7 +1484,7 @@ async function card3Check(){
     if (error) {
     console.error("取得エラー:", error);
     };
-    if(enemyCardRightNumber === 0){
+    if(enemyCardRightNumber === 1000){
         enemyCardRightNumber = data.set_card3;
     };
     if(enemyCardRightNumber !== data.set_card3){
