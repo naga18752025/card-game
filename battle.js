@@ -584,7 +584,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
             });
             hand.querySelector(".my-number").textContent = deck[setCount];
             setCount ++;
-            if(setCount === 53){
+            if(setCount === 54){
                 deck = createDeck();
                 setCount = 0;
                 alert("自分の山札を使い切ったため、新しい山札になりました")
@@ -635,7 +635,7 @@ document.querySelectorAll(".my-card").forEach(card => {
                 kougekiTeishi();
                 document.querySelector(".selected").textContent = deck[setCount];
                 setCount ++;
-                if(setCount === 53){
+                if(setCount === 54){
                     deck = createDeck();
                     setCount = 0;
                     alert("自分の山札を使い切ったため、新しい山札になりました")
@@ -654,7 +654,7 @@ document.querySelectorAll(".my-card").forEach(card => {
                 kougekiTeishi(); 
                 document.querySelector(".selected").textContent = deck[setCount]; 
                 setCount ++;
-                if(setCount === 53){
+                if(setCount === 54){
                     deck = createDeck();
                     setCount = 0;
                     alert("自分の山札を使い切ったため、新しい山札になりました")
@@ -680,7 +680,7 @@ document.querySelectorAll(".my-card").forEach(card => {
                 boueiTeishi();
                 document.querySelector(".selected").textContent = deck[setCount]; 
                 setCount ++;
-                if(setCount === 53){
+                if(setCount === 54){
                     deck = createDeck();
                     setCount = 0;
                     alert("自分の山札を使い切ったため、新しい山札になりました")
@@ -708,7 +708,7 @@ document.querySelectorAll(".my-card").forEach(card => {
             boueiTeishi();            
             document.querySelector(".selected").textContent = deck[setCount]; 
             setCount ++;
-            if(setCount === 53){
+            if(setCount === 54){
                 deck = createDeck();
                 setCount = 0;
                 alert("自分の山札を使い切ったため、新しい山札になりました")
@@ -793,7 +793,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                 }
                 document.querySelector(".selected").textContent = deck[setCount];
                 setCount ++;
-                if(setCount === 53){
+                if(setCount === 54){
                     deck = createDeck();
                     setCount = 0;
                     alert("自分の山札を使い切ったため、新しい山札になりました")
