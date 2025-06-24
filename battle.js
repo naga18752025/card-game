@@ -615,7 +615,7 @@ document.querySelectorAll(".my-hand").forEach(hand => {
 
 // 自分のセットカード監視
 document.querySelectorAll(".my-card").forEach(card => {
-    card.addEventListener("click", function(){
+    card.addEventListener("click", async function(){
         if(!chargeSelect){ // チャージ用カード選択後  // ↓チャージ合計がセットカードの数を超えていないかとJOKERの確認
             const chargeRyou = parseInt(card.querySelector(".my-charge").querySelector("span").textContent.match(/\d+/)[0]) + parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]);
             if(card.querySelector(".my-number").textContent.replace(/\s/g, "") === "JOKER"){
@@ -669,21 +669,19 @@ document.querySelectorAll(".my-card").forEach(card => {
                 conditionReset();                                                    
             };
         }else if(!changeSelect){ // チェンジ用カード選択後
-            card.querySelector(".my-number").textContent = document.querySelector(".selected").textContent;
+            const newCard = document.querySelector(".selected").textContent.replace(/\s/g, "") === "JOKER" ? 100 : parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]);
+            swapCard(card, document.querySelector(".selected").textContent);
             shieldDelete(card.querySelector(".my-shield"));
             chargeDelete(card.querySelector(".my-charge"));
             if(card.querySelector(".my-number").id === "my-card-left-number"){
-                const newCard = card.querySelector(".my-number").textContent.replace(/\s/g, "") === "JOKER" ? 100 : parseInt(card.querySelector(".my-number").textContent.match(/\d+/)[0]);
                 card3Update(newCard);
                 guard3Update(0);
                 charge3Update(0);
             }else if(card.querySelector(".my-number").id === "my-card-center-number"){
-                const newCard = card.querySelector(".my-number").textContent.replace(/\s/g, "") === "JOKER" ? 100 : parseInt(card.querySelector(".my-number").textContent.match(/\d+/)[0]);
                 card2Update(newCard);
                 guard2Update(0);
                 charge2Update(0);                
             }else{
-                const newCard = card.querySelector(".my-number").textContent.replace(/\s/g, "") === "JOKER" ? 100 : parseInt(card.querySelector(".my-number").textContent.match(/\d+/)[0]);
                 card1Update(newCard);
                 guard1Update(0);
                 charge1Update(0);                
@@ -807,7 +805,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
                 }else{
-
+                    attackEnemyCard(card);
                     alert("attack failed");
                     damagePattern(damageFrom + "_card3_failed", chargeRyou);
                 };
@@ -854,7 +852,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
                 }else{
-
+                    attackEnemyCard(card);
                     alert("attack failed");
                     damagePattern(damageFrom + "_card2_failed", chargeRyou);                    
                 };
@@ -901,7 +899,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     document.querySelector(".selected").parentElement.style.backgroundColor = "white"; 
                     document.querySelector(".selected").textContent = "";
                 }else{
-
+                    attackEnemyCard(card);
                     alert("attack failed");
                     damagePattern(damageFrom + "_card1_failed", chargeRyou);                  
                 };
@@ -924,6 +922,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
             };
             kougekiTeishi();
         }else if(!tokkouSelect){ // トッコウ用カード選択後
+            attackEnemyCard(card);
             const tokkouNumber = parseInt(document.querySelector(".selected").textContent.match(/\d+/)[0]);
             let hikiwake = true;
             if(card.querySelector(".my-number").classList.contains("enemy-card-left-number")){
@@ -958,6 +957,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     document.getElementById("enemy-charge3").style.display = "none"; 
                     document.getElementById("enemy-card-left").style.background = "white";
                 }else{
+                    attackEnemyCard(card);
                     alert("tokkou failed");
                     damagePattern(damageFrom + "_card3_failed", tokkouNumber);
                 };
@@ -994,6 +994,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     damagePattern(damageFrom + "_card2_failed_JOKER", tokkouNumber);
                     document.getElementById("enemy-card-center").style.background = "white";
                 }else{
+                    attackEnemyCard(card);
                     alert("tokkou failed");
                     damagePattern(damageFrom + "_card2_failed", tokkouNumber);
                 };
@@ -1031,6 +1032,7 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     damagePattern(damageFrom + "_card1_failed_JOKER", tokkouNumber);
                     document.getElementById("enemy-card-right").style.background = "white";
                 }else{
+                    attackEnemyCard(card);
                     alert("tokkou failed");
                     damagePattern(damageFrom + "_card1_failed", tokkouNumber);
                 }; 
@@ -1420,7 +1422,7 @@ async function card1Check(){
         enemyCardLeftNumber = data.set_card1;
     };
     if(enemyCardLeftNumber !== data.set_card1){
-        alert("相手の左のセットカードが変更されました")
+        alert("相手の左のセットカードが変更されました");
     };
     enemyCardLeftNumber = data.set_card1;
 }
@@ -1438,7 +1440,7 @@ async function card2Check(){
         enemyCardCenterNumber = data.set_card2;
     };
     if(enemyCardCenterNumber !== data.set_card2){
-        alert("相手の中央のセットカードが変更されました")
+        alert("相手の中央のセットカードが変更されました");
     };
     enemyCardCenterNumber = data.set_card2;
 }
@@ -1456,7 +1458,7 @@ async function card3Check(){
         enemyCardRightNumber = data.set_card3;
     };
     if(enemyCardRightNumber !== data.set_card3){
-        alert("相手の右のセットカードが変更されました")
+        alert("相手の右のセットカードが変更されました");
     };
     enemyCardRightNumber = data.set_card3;
 }  
@@ -1779,4 +1781,37 @@ function draw(){
 
 function back(){
     window.location.href="index.html";
+}
+
+function attackEnemyCard(cardElement) {
+    cardElement.classList.add("shake");
+    setTimeout(() => {
+    cardElement.classList.remove("shake"); // 再利用のためにリセット
+    }, 300);
+}
+
+function flashHitEffect(cardElement) {
+    cardElement.classList.add("hit-flash");
+    setTimeout(() => {
+    cardElement.classList.remove("hit-flash");
+    }, 400);
+}
+
+function swapCard(oldCardElement, newCardValue) {
+  // 1. 古いカードをアニメーションで消す
+    oldCardElement.classList.add("card-out");
+    action = false;
+
+  // 2. アニメーションが終わったら内容変更して新しいカードを表示
+    setTimeout(() => {
+    oldCardElement.querySelector(".my-number").textContent = newCardValue;
+    oldCardElement.classList.remove("card-out");
+    oldCardElement.classList.add("card-in");
+
+    // 3. アニメーション終了後にクラス削除（再利用のため）
+    setTimeout(() => {
+        oldCardElement.classList.remove("card-in");
+        action = true;
+    }, 400);
+    }, 400);
 }
