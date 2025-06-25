@@ -31,7 +31,7 @@ function reloadCheck(){
         window.location.href = "index.html";
     };
 }
-// reloadCheck();
+reloadCheck();
 
 // 名前登録
 const myName = localStorage.getItem("username");
