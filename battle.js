@@ -27,11 +27,11 @@ function reloadCheck(){
     if(localStorage.getItem("reload") === "none"){
         localStorage.setItem("reload", "done")
     }else{
-        alert("不正な操作を検知しました");
+        alert("リロードされたため、バトルを中止します。");
         window.location.href = "index.html";
     };
 }
-// reloadCheck();
+reloadCheck();
 
 // 名前登録
 const myName = localStorage.getItem("username");
