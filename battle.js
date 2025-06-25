@@ -31,7 +31,7 @@ function reloadCheck(){
         window.location.href = "index.html";
     };
 }
-reloadCheck();
+// reloadCheck();
 
 // 名前登録
 const myName = localStorage.getItem("username");
@@ -1819,6 +1819,7 @@ function youWin(){
     boueiTeishi();
     turnUpdate();
     conditionReset();
+    launchConfetti();
     document.getElementById("reloadsitayo").style.display = "flex";
     document.getElementById("modoru").style.display = "block";
 }
@@ -1885,3 +1886,22 @@ function swapCard(oldCardElement, newCardValue) {
     }, 400);
     }, 400);
 }
+
+function launchConfetti() {
+    confetti({
+        particleCount: 300,
+        spread: 100,
+        origin: { y: 0.4 }
+    });
+    confetti({
+        particleCount: 300,
+        spread: 100,
+        origin: { y: 0.1 }
+    });
+    confetti({
+        particleCount: 300,
+        spread: 100,
+        origin: { y: 0.7 }
+    });
+}
+
