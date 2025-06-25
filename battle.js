@@ -1473,7 +1473,12 @@ async function card1Check(){
         enemyCardLeftNumber = data.set_card1;
     };
     if(enemyCardLeftNumber !== data.set_card1){
-        let houkoku =  "相手の左のセットカードが"+ String(enemyCardLeftNumber) +  "から変更されました";
+        let houkoku = ";"
+        if(enemyCardLeftNumber === 100){
+            houkoku =  "相手の左のセットカードがJOKERから変更されました";
+        }else{
+            houkoku =  "相手の左のセットカードが"+ String(enemyCardLeftNumber) +  "から変更されました";
+        };
         alert(houkoku);
     };
     enemyCardLeftNumber = data.set_card1;
@@ -1493,7 +1498,12 @@ async function card2Check(){
         enemyCardCenterNumber = data.set_card2;
     };
     if(enemyCardCenterNumber !== data.set_card2){
-        let houkoku =  "相手の中央のセットカードが"+ String(enemyCardCenterNumber) +  "から変更されました";
+        let houkoku = "";
+        if(enemyCardCenterNumber === 100){
+            houkoku =  "相手の中央のセットカードがJOKERから変更されました";
+        }else{
+            houkoku =  "相手の中央のセットカードが"+ String(enemyCardCenterNumber) +  "から変更されました";
+        };
         alert(houkoku);
     };
     enemyCardCenterNumber = data.set_card2;
@@ -1512,7 +1522,12 @@ async function card3Check(){
         enemyCardRightNumber = data.set_card3;
     };
     if(enemyCardRightNumber !== data.set_card3){
-        let houkoku =  "相手の右のセットカードが"+ String(enemyCardRightNumber) +  "から変更されました";
+        let houkoku = "";
+        if(enemyCardRightNumber === 100){
+            houkoku =  "相手の右のセットカードがJOKERから変更されました";
+        }else{
+            houkoku =  "相手の右のセットカードが"+ String(enemyCardRightNumber) +  "から変更されました";
+        };zs
         alert(houkoku);
     };
     enemyCardRightNumber = data.set_card3;
