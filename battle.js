@@ -31,7 +31,7 @@ function reloadCheck(){
         window.location.href = "index.html";
     };
 }
-reloadCheck();
+// reloadCheck();
 
 // 名前登録
 const myName = localStorage.getItem("username");
@@ -270,6 +270,7 @@ async function retrySubscribe2() {
     console.log("🔁 再接続を試みます...");
     await new Promise(resolve => setTimeout(resolve, 2000));
     await aitemachi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
+    document.getElementById("connection-error").style.display = "none";
 }
 // ポーリング開始
 let aitenojotai = null;
@@ -1224,6 +1225,9 @@ function myTurn(){
     enemyUpdate();
     damagePattern("", 0);
     cancelTimer();
+        setTimeout(() => {
+            document.getElementById("connection-error").style.display = "none";
+    }, 3000);
 }
 
 // 相手のターン中
@@ -1774,6 +1778,7 @@ async function retrySubscribe() {
     console.log("🔁 再接続を試みます...");
     await new Promise(resolve => setTimeout(resolve, 2000));
     await machi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
+    document.getElementById("connection-error").style.display = "none";
 }
 // ポーリング開始
 function startPolling() {
