@@ -1257,7 +1257,7 @@ function turnUpdate(){
     console.log("ターン情報更新")
     setTimeout(() => {
         turnUpdate2();
-    }, 1500);
+    }, 2000);
 }
 async function turnUpdate2(){
     const { data, error: fetchError } = await supabase

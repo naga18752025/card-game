@@ -127,6 +127,10 @@ html, body {
     height: 17vw; 
     border: 1vw double #515151;
     background: linear-gradient(145deg, rgb(180, 161, 222), rgb(123, 54, 183));
+    box-shadow:
+    2px 2px 0 #444,
+    4px 4px 0 #333,
+    6px 6px 0 #222;
 }
 
 #sutehuda{
@@ -407,4 +411,36 @@ p, span{
   background-color: rgba(255, 255, 255, 0.5);
   font-family: "M PLUS Rounded 1c", sans-serif;
   z-index: 9999;
+}
+
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-5px, 0); }
+  40% { transform: translate(5px, 0); }
+  60% { transform: translate(-5px, 0); }
+  80% { transform: translate(5px, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+.shake {
+  animation: shake 0.3s ease;
+}
+
+
+@keyframes cardOut {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(-100px); opacity: 0; }
+}
+
+@keyframes cardIn {
+  0% { transform: translateX(100px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.card-out {
+  animation: cardOut 0.4s ease forwards;
+}
+
+.card-in {
+  animation: cardIn 0.4s ease forwards;
 }
