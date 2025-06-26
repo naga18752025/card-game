@@ -1244,8 +1244,10 @@ function enemyTurn(){
     document.getElementById("message").textContent = "相手のターン中";
     document.getElementById("message").classList.add("enemy-turn");
     document.getElementById("message").style.display = "block";
-    machi();
-    startPolling();
+    setTimeout(() => {
+        machi();
+        startPolling();
+    },2000);
     console.log("相手のターン中");
     console.trace();
     startTimer();
