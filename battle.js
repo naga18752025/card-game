@@ -1783,7 +1783,7 @@ async function machi() {
         });
 }
 let genkai = 0;
-let isRetrying
+let isRetrying = false;
 async function retrySubscribe() {
     if (isRetrying || genkai >= 5) return;
     isRetrying = true;
