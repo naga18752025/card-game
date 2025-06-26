@@ -1785,7 +1785,7 @@ async function machi() {
 let genkai = 0;
 let isRetrying = false;
 async function retrySubscribe() {
-    if (isRetrying || genkai >= 5) return;
+    if (isRetrying) return;
     isRetrying = true;
 
     if(genkai <= 5){
