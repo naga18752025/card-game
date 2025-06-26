@@ -285,7 +285,7 @@ function startPolling2() {
             .select("set_card1")
             .eq("name", enemyName)
             .single();
-        console.log("ポーリングを実施");
+        console.log("ポーリングを実施")
         if (!error && data.set_card1 && (data.set_card1 !== aitenojotai)) {
             console.log("ポーリングでturnの変化をキャッチ");
             document.getElementById("connection-error").style.display = "none";
@@ -1789,11 +1789,12 @@ async function retrySubscribe() {
     isRetrying = true;
 
     if(genkai <= 5){
+        await supabase.removeAllChannels();
         console.log("🔁 再接続を試みます...");
         await new Promise(resolve => setTimeout(resolve, 2000));
         await machi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
         genkai++;
-    };
+    }
 
     isRetrying = false;
     document.getElementById("connection-error").style.display = "none";
@@ -1807,7 +1808,6 @@ function startPolling() {
             .eq("name", myName)
             .single();
 
-        console.log("ポーリングを実施");
         if (!error && data.turn && (data.turn !== lastTurn)) {
             lastTurn = data.turn;
             console.log("ポーリングでturnの変化をキャッチ");
