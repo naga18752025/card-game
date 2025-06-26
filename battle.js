@@ -1738,6 +1738,7 @@ let realtimeChannel = null;
 async function machi() {
     if (realtimeChannel) {
         await supabase.removeChannel(realtimeChannel);
+        realtimeChannel = null;
     }
 
     realtimeChannel = supabase
@@ -1783,12 +1784,17 @@ async function machi() {
 }
 let genkai = 0;
 async function retrySubscribe() {
+    if (isRetrying || genkai >= 5) return;
+    isRetrying = true;
+
     if(genkai <= 5){
         console.log("🔁 再接続を試みます...");
         await new Promise(resolve => setTimeout(resolve, 2000));
         await machi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
         genkai++;
     };
+
+    isRetrying = false;
     document.getElementById("connection-error").style.display = "none";
 }
 // ポーリング開始
