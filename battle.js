@@ -232,7 +232,7 @@ async function aitemachi() {
         await supabase.removeChannel(realtimeChannel2);
     }
 
-    realtimeChannel = supabase
+    realtimeChannel2 = supabase
         .channel(`my_channel2 ${myName}`)
         .on(
             "postgres_changes",
