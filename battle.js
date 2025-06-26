@@ -268,7 +268,7 @@ async function aitemachi() {
 }
 let genkai2 = 0;
 async function retrySubscribe2() {
-    if(genkai2 !== 5){
+    if(genkai2 <= 5){
         console.log("🔁 再接続を試みます...");
         await new Promise(resolve => setTimeout(resolve, 2000));
         await aitemachi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
@@ -1781,7 +1781,7 @@ async function machi() {
 }
 let genkai = 0;
 async function retrySubscribe() {
-    if(genkai !== 5){
+    if(genkai <= 5){
         console.log("🔁 再接続を試みます...");
         await new Promise(resolve => setTimeout(resolve, 2000));
         await machi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
