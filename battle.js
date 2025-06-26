@@ -285,7 +285,7 @@ function startPolling2() {
             .select("set_card1")
             .eq("name", enemyName)
             .single();
-        console.log("ポーリングを実施")
+        console.log("ポーリングを実施");
         if (!error && data.set_card1 && (data.set_card1 !== aitenojotai)) {
             console.log("ポーリングでturnの変化をキャッチ");
             document.getElementById("connection-error").style.display = "none";
@@ -1807,6 +1807,7 @@ function startPolling() {
             .eq("name", myName)
             .single();
 
+        console.log("ポーリングを実施");
         if (!error && data.turn && (data.turn !== lastTurn)) {
             lastTurn = data.turn;
             console.log("ポーリングでturnの変化をキャッチ");
