@@ -285,7 +285,7 @@ function startPolling2() {
             .select("set_card1")
             .eq("name", enemyName)
             .single();
-
+        console.log("ポーリングを実施")
         if (!error && data.set_card1 && (data.set_card1 !== aitenojotai)) {
             console.log("ポーリングでturnの変化をキャッチ");
             document.getElementById("connection-error").style.display = "none";
