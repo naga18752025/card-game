@@ -31,7 +31,7 @@ function reloadCheck(){
         window.location.href = "index.html";
     };
 }
-reloadCheck();
+// reloadCheck();
 
 // 名前登録
 const myName = localStorage.getItem("username");
@@ -233,7 +233,7 @@ async function aitemachi() {
     }
 
     realtimeChannel = supabase
-        .channel("my_channel2")
+        .channel(`my_channel2 ${myName}`)
         .on(
             "postgres_changes",
             {
@@ -266,10 +266,14 @@ async function aitemachi() {
             }
         });
 }
+let genkai2 = 0;
 async function retrySubscribe2() {
-    console.log("🔁 再接続を試みます...");
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    await aitemachi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
+    if(genkai2 !== 5){
+        console.log("🔁 再接続を試みます...");
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await aitemachi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
+        genkai2++;
+    };
     document.getElementById("connection-error").style.display = "none";
 }
 // ポーリング開始
@@ -801,14 +805,14 @@ document.querySelectorAll(".enemy-card").forEach(card => {
                     blockUpdate(2);
                 }else{
                     blockUpdate(1);
-                }
+                };
                 document.querySelector(".selected").textContent = deck[setCount];
                 setCount ++;
                 if(setCount === 54){
                     deck = createDeck();
                     setCount = 0;
-                    alert("自分の山札を使い切ったため、新しい山札になりました")
-                }
+                    alert("自分の山札を使い切ったため、新しい山札になりました");
+                };
                 blockjoutai = false;
                 conditionReset();
                 boueiTeishi();
@@ -1232,6 +1236,7 @@ function myTurn(){
 
 // 相手のターン中
 function enemyTurn(){
+    genkai = 0;
     document.getElementById("my-block1").style.display = "none";
     document.getElementById("my-block2").style.display = "none";
     document.getElementById("my-block3").style.display = "none";
@@ -1774,10 +1779,14 @@ async function machi() {
             }
         });
 }
+let genkai = 0;
 async function retrySubscribe() {
-    console.log("🔁 再接続を試みます...");
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    await machi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
+    if(genkai !== 5){
+        console.log("🔁 再接続を試みます...");
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await machi(); // ← subscribeToChannel() ではなく machi() を呼び直すようにする
+        genkai++;
+    };
     document.getElementById("connection-error").style.display = "none";
 }
 // ポーリング開始
