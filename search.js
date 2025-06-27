@@ -158,13 +158,15 @@ let hakken = true;
     // 各ユーザー名を行として追加
     data.forEach((waiter) => {
     const row = table.insertRow();
-    const cell = row.insertCell();
-    cell.textContent = waiter.player + "　　　　";
+    const nameCell = row.insertCell();
+    nameCell.textContent = waiter.player;
+    const buttonCell = row.insertCell();
+    buttonCell.style.textAlign = "right";
     const newElement = document.createElement("button");
     newElement.textContent = "対戦";
     newElement.id = waiter.player;
     newElement.classList = "taisen";
-    const id_ = newElement.id
+    buttonCell.appendChild(newElement);
     newElement.addEventListener("click", () => {
         let roomPass = prompt("ルームナンバーを入力してください：");
         // キャンセル or 空文字 対策
@@ -199,7 +201,6 @@ let hakken = true;
         }
 
     });
-    cell.appendChild(newElement)
     });
 
   // 表を指定のdivに追加
