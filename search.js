@@ -8,28 +8,6 @@ document.getElementById("roomNumber").textContent = randomNumber.toString();
 let logoutOK =true;
 let tsunoru = true;
 
-// 山札作成
-function createDeck() {
-    const suits = ['♠', '♥', '♦', '♣'];  // 絵柄（省略してもOK）
-    const deck = [];
-    // 1〜13を4スート分入れる（1=A, 11=J, 12=Q, 13=K）
-    for (let suit of suits) {
-        for (let i = 1; i <= 13; i++) {
-            deck.push(`${suit}${i}`);
-        };
-    };
-    // JOKERを1枚（必要に応じて増やせる）
-    deck.push("JOKER");
-    deck.push("JOKER");
-    // シャッフル（Fisher-Yatesアルゴリズム）
-    for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-    };
-    return deck;
-}
-const newdeck = createDeck();
-
 function wait(){
     if(tsunoru){
         startPolling();
@@ -40,7 +18,6 @@ function wait(){
 }
 
 async function wait2(){
-    localStorage.setItem("deck", JSON.stringify(newdeck));
     localStorage.setItem("turnkanri", randomNumber);
     const name = localStorage.getItem("username");
     const { error: Error } = await supabase
@@ -151,6 +128,8 @@ async function join(){
     const header = table.insertRow();
     const headerCell = document.createElement("th");
     headerCell.textContent = "対戦待ちユーザー";
+    headerCell.colSpan = 2; // ボタン列とユーザー名列を統合
+    headerCell.style.textAlign = "center";
     header.appendChild(headerCell);
 
 let hakken = true;
