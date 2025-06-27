@@ -202,6 +202,11 @@ let hakken = true;
 
     });
     });
+    if(data.length === 0){
+        const nullCell = table.insertRow().insertCell();
+        nullCell.textContent = "No waiters";
+        nullCell.style.textAlign = "center";
+    }
 
   // 表を指定のdivに追加
     const container = document.getElementById("joinRoom");
