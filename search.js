@@ -2,7 +2,8 @@ const supabase = window.supabase.createClient("https://ngvdppfzcgbkdtjlwbvh.supa
 
 let realtimeChannel = null;
 const isFirst = Math.random() < 0.5;
-const randomNumber = Math.floor(1000000000 + Math.random() * 9000000000);
+const randomNumber = Math.floor(1000 + Math.random() * 9000);
+document.getElementById("roomNumber").textContent = randomNumber.toString();
 
 let logoutOK =true;
 let tsunoru = true;
@@ -33,6 +34,7 @@ function wait(){
     if(tsunoru){
         startPolling();
         wait2();
+        document.getElementById("room").style.display = "block";
         tsunoru = false;
     };
 }
@@ -47,8 +49,7 @@ async function wait2(){
             { 
                 "player": name,
                 "turn": !isFirst,
-                "shared_deck": newdeck,
-                "TurnKanriNumber": randomNumber
+                "roomNumber": randomNumber
             }
 
         ]);
@@ -142,7 +143,7 @@ async function join(){
     document.getElementById("back2").style.display = "block";
     const { data, error } = await supabase
     .from("waiters")
-    .select("player, turn, shared_deck, TurnKanriNumber");
+    .select("player, turn, roomNumber");
     // テーブル要素を作成
     const table = document.createElement("table");
 
@@ -165,11 +166,29 @@ let hakken = true;
     newElement.classList = "taisen";
     const id_ = newElement.id
     newElement.addEventListener("click", () => {
-        if(hakken){
+        let roomPass = prompt("ルームナンバーを入力してください：");
+        // キャンセル or 空文字 対策
+        if (!roomPass) {
+            return;
+        };
+        // 全角数字を半角に変換（必要なら）
+        roomPass = roomPass.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+        // 数値に変換
+        roomPass = Number(roomPass);
+        // 数値変換失敗（NaN）対策
+        if (isNaN(roomPass)) {
+            alert("無効な入力です。数字を入力してください。");
+            return;
+        };
+        if(roomPass === 0){
+            return;
+        }else if(roomPass !== waiter.roomNumber){
+            alert("ルームナンバーが違います");
+            return;
+        };
+        if(hakken && (roomPass === waiter.roomNumber)){
             document.getElementById("teishi").style.display = "flex";
-            localStorage.setItem("deck", JSON.stringify(waiter.shared_deck));
             localStorage.setItem("turn", waiter.turn);
-            localStorage.setItem("turnkanri", waiter.TurnKanriNumber);
             alert("対戦を開始します")
             enemyLock(newElement.id);
             hakken = false;
@@ -223,6 +242,7 @@ function back2(){
     document.getElementById("joinRoom").style.display = "none";
     document.getElementById("back").style.display = "none";
     document.getElementById("back2").style.display = "none";
+    document.getElementById("room").style.display = "none";
 }
 
 async function enemyLock(id_){
