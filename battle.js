@@ -1929,3 +1929,12 @@ function launchConfetti() {
     });
 }
 
+document.getElementById("sutehuda").addEventListener("click", function(){
+    const yurukyara = document.getElementById("yurukyara_room");
+    if(yurukyara.style.display === "none"){
+        yurukyara.style.display = "flex";
+    }else{
+        yurukyara.style.display = "none";
+    }
+
+})
