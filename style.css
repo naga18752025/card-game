@@ -73,8 +73,6 @@ html, body {
 
 /* 対戦開始ボタン */
 #start {
-  margin-top: 20px;
-  margin-bottom: 20px;
   padding: 14px 20px;
   font-size: 5vw;
   color: white;
@@ -92,10 +90,10 @@ html, body {
 /* ルールボタン */
 #rule {
   color: black;
-  margin-top: 10px;
+  margin-top: 30px;
   background-color: rgb(252, 237, 189);
   border: none;
-  padding: 12px 20px;
+  padding: 14px 20px;
   border-radius: 10px;
   font-size: 5vw;
   width: 100%;
@@ -106,29 +104,6 @@ html, body {
   background-color: rgb(255, 224, 121);
 }
 
-/* 画面サイズが大きい場合にフォントを固定 */
-@media screen and (min-width: 768px) {
-  #ue h1 {
-    font-size: 32px;
-  }
-
-  #start,
-  #rule {
-    font-size: 24px;
-    padding: 15px 40px;
-    width: auto;
-  }
-
-  #main {
-    padding: 40px;
-    width: 60%;
-  }
-
-  #shita p {
-    font-size: 14px;
-  }
-
-}
 
 #logout{
   color: black;
