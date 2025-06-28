@@ -460,29 +460,14 @@ p, span{
 }
 
 #yurukyara_comment{
-  white-space: nowrap; 
-  position: relative;
-  background: #e0f7fa;
+  height: 40%;
+  width: auto;
   margin-right: auto;
-  border: 2px solid #00acc1;
-  border-radius: 8px;
-  padding: 1em;
-  max-width: 300px;
-  font-size: 1rem;
-  color: #006064;
-  height: 2vh;
+  animation: jump 2.0s ease-in-out infinite;
 }
 
-#yurukyara_comment::after {
-  content: "";
-  position: absolute;
-  top: 10px;
-  left: -20px; /* 左にしっぽ */
-  border: 10px solid transparent;
-  border-right-color: #e0f7fa; /* 吹き出し背景色 */
-}
 @keyframes jump {
-  0%   { transform: translateY(1vh); }
-  50%  { transform: translateY(-1vh); } /* 少し上にふわっと浮く */
-  100% { transform: translateY(1vh); }
+  0%   { transform: translateY(2vh); }
+  50%  { transform: translateY(0vh); } /* 少し上にふわっと浮く */
+  100% { transform: translateY(2vh); }
 }
