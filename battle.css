@@ -469,6 +469,7 @@ p, span{
   max-width: 300px;
   font-size: 1rem;
   color: #006064;
+  height: 2vh;
 }
 
 #yurukyara_comment::after {
