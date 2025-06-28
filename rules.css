@@ -84,3 +84,24 @@ html, body {
 #topbackbutton:hover{
     background-color:rgb(203, 203, 203);
 }
+
+#draggable {
+  width: auto;
+  height: 10vh;
+  background: none;
+  position: absolute;
+  top: 20%;
+  left: 80%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  touch-action: none;
+  cursor: grab;
+  z-index: 9999;
+  animation: jump 2.0s ease-in-out infinite;
+}
+
+@keyframes jump {
+  0%   { transform: translateY(1vh); }
+  50%  { transform: translateY(-1vh); } /* 少し上にふわっと浮く */
+  100% { transform: translateY(1vh); }
+}
