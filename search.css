@@ -120,7 +120,7 @@ table{
   width: auto;
   height: 10vh;
   background: none;
-  position: absolute;
+  position:fixed;
   top: 20%;
   left: 70%;
   transform: translate(-50%, -50%);
