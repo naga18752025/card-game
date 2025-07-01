@@ -1538,7 +1538,7 @@ async function card3Check(){
             houkoku =  "相手の右のセットカードがJOKERから変更されました";
         }else{
             houkoku =  "相手の右のセットカードが"+ String(enemyCardRightNumber) +  "から変更されました";
-        };zs
+        };
         alert(houkoku);
     };
     enemyCardRightNumber = data.set_card3;
